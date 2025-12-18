@@ -1,0 +1,9 @@
+# Local LeftHook configuration
+# Copy this file to .lefthook-local.yml and customize for your local environment
+# This file is gitignored and will not be committed
+
+# Example: Skip certain hooks locally
+# pre-commit:
+#   skip:
+#     - biome
+

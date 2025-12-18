@@ -1,0 +1,4 @@
+# Templates directory
+# Base stacks go in templates/bases/
+# Addons go in templates/addons/
+

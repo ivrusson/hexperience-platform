@@ -1,0 +1,36 @@
+{
+  "name": "@hexp/cli",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "create-hexp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "rslib build",
+    "dev": "rslib build --watch",
+    "start": "node dist/index.js",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hexp/engine": "workspace:*",
+    "@hexp/catalog": "workspace:*",
+    "@hexp/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@rslib/core": "^0.18.5",
+    "@types/node": "^24.10.4",
+    "typescript": "^5.9.3"
+  }
+}
