@@ -29,7 +29,7 @@ export async function executeJsonMerge(
     }
     const arrayMergeStrategy =
       operation.arrayMerge === 'replace'
-        ? (destinationArray: unknown[], sourceArray: unknown[]) => sourceArray
+        ? (_destinationArray: unknown[], sourceArray: unknown[]) => sourceArray
         : operation.arrayMerge === 'merge'
           ? (destinationArray: unknown[], sourceArray: unknown[]) => {
               const result = [...destinationArray]
