@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "ESNext",
+    "lib": ["ES2021"],
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "checkJs": false,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "composite": true,
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@hexp/shared": ["./packages/shared/src"],
+      "@hexp/shared/*": ["./packages/shared/src/*"],
+      "@hexp/catalog": ["./packages/catalog/src"],
+      "@hexp/catalog/*": ["./packages/catalog/src/*"],
+      "@hexp/engine": ["./packages/engine/src"],
+      "@hexp/engine/*": ["./packages/engine/src/*"],
+      "@hexp/cli": ["./apps/cli/src"],
+      "@hexp/cli/*": ["./apps/cli/src/*"]
+    }
+  },
+  "references": [
+    { "path": "./packages/shared" },
+    { "path": "./packages/catalog" },
+    { "path": "./packages/engine" },
+    { "path": "./apps/cli" }
+  ],
+  "exclude": ["node_modules", "dist", ".turbo"]
+}

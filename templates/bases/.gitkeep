@@ -1,0 +1,5 @@
+# Base stack templates go here
+# Each base should have:
+# - manifest.json (with id, type, capabilities, prompts)
+# - template/ directory (with source files)
+

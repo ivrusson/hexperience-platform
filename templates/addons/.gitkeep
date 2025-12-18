@@ -1,0 +1,5 @@
+# Addon templates go here
+# Each addon should have:
+# - manifest.json (with id, type, requires, provides, conflicts, prompts, ops)
+# - patches/ directory (with files/snippets for modifications)
+
