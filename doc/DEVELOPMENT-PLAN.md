@@ -118,8 +118,8 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
   - `--single`: Forzar tipo single package
   - `--output <dir>`: Directorio de salida
 - [x] Soporte para archivo de configuración (`--config <file>`)
-  - Formato JSON
-  - Validación de estructura
+  - Formato JSON o YAML
+  - Validación de estructura con Zod
 - [x] Validar argumentos requeridos
 - [x] Validar compatibilidad de base/addons en modo no-interactivo
 - [x] Mostrar ayuda con `--help` (auto-generada por Commander)
@@ -135,21 +135,21 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 
 #### US-3.5: Como usuario, quiero usar una interfaz TUI para tareas complejas
 **Tareas:**
-- [ ] Instalar y configurar Ink + React para TUI
-- [ ] Crear componente base de navegación TUI
-- [ ] Implementar TUI para crear modelos de datos (similar a lazygit)
+- [x] Instalar y configurar Ink + React para TUI
+- [x] Crear componente base de navegación TUI
+- [x] Implementar TUI para crear modelos de datos (similar a lazygit)
   - Editor de modelos con navegación por teclado
   - Definición de campos y tipos
   - Relaciones entre modelos
   - Preview de esquemas
-- [ ] Implementar TUI para gestionar estructura de monorepo
+- [x] Implementar TUI para gestionar estructura de monorepo
   - Agregar/eliminar apps
   - Agregar/eliminar packages
   - Configurar dependencias
   - Visualizar estructura
-- [ ] Navegación con teclado (flechas, tab, enter, escape)
-- [ ] Persistencia de estado en TUI
-- [ ] Tests de componentes TUI
+- [x] Navegación con teclado (flechas, tab, enter, escape)
+- [x] Persistencia de estado en TUI
+- [x] Tests de componentes TUI
 
 #### US-3.6: Como usuario, quiero generar proyectos monorepo con Turbo
 **Tareas:**
@@ -167,7 +167,7 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
   - `biome.json` con configuración monorepo-wide
   - Scripts en package.json raíz
 - [x] Generar `tsconfig.json` base con project references
-- [ ] Tests para generación de monorepos
+- [x] Tests para generación de monorepos
 
 #### US-3.7: Como usuario, quiero que los proyectos generados tengan estándares de calidad
 **Tareas:**
@@ -180,11 +180,11 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
   - Formatter (2 espacios, single quotes, etc.)
   - Linter con reglas recomendadas
   - VCS integration
-- [ ] Agregar scripts de calidad en package.json:
+- [x] Agregar scripts de calidad en package.json:
   - `lint`, `format`, `type-check`, `check`
 - [x] Configurar `.gitignore` con patrones estándar
-- [ ] Documentar estándares en README generado
-- [ ] Tests de generación de estándares
+- [x] Documentar estándares en README generado
+- [x] Tests de generación de estándares
 
 ---
 

@@ -77,9 +77,98 @@ describe('configLoader', () => {
           loadConfig(configPath)
         },
         {
-          message: /must be a string/,
+          message: /Config validation failed/,
         }
       )
+    })
+
+    test('should load valid YAML config file', async () => {
+      const configPath = join(tempDir, 'config.yaml')
+      const yamlContent = `base: test-base
+addons:
+  - addon1
+  - addon2
+name: test-project
+monorepo: true
+output: ./output
+variables:
+  db: postgres
+`
+      await writeFile(configPath, yamlContent)
+
+      const loaded = loadConfig(configPath)
+      strictEqual(loaded.base, 'test-base')
+      strictEqual(loaded.addons?.length, 2)
+      strictEqual(loaded.name, 'test-project')
+      strictEqual(loaded.monorepo, true)
+      strictEqual(loaded.output, './output')
+      strictEqual(loaded.variables?.db, 'postgres')
+    })
+
+    test('should load valid YAML config file with .yml extension', async () => {
+      const configPath = join(tempDir, 'config.yml')
+      const yamlContent = `base: test-base
+name: test-project
+`
+      await writeFile(configPath, yamlContent)
+
+      const loaded = loadConfig(configPath)
+      strictEqual(loaded.base, 'test-base')
+      strictEqual(loaded.name, 'test-project')
+    })
+
+    test('should validate YAML config structure', async () => {
+      const configPath = join(tempDir, 'invalid-structure.yaml')
+      await writeFile(configPath, 'base: 123\nname: test')
+
+      await rejects(
+        async () => {
+          loadConfig(configPath)
+        },
+        {
+          message: /Config validation failed/,
+        }
+      )
+    })
+
+    test('should throw error for invalid YAML', async () => {
+      const configPath = join(tempDir, 'invalid.yaml')
+      await writeFile(configPath, 'base: test\n  invalid: indentation')
+
+      await rejects(
+        async () => {
+          loadConfig(configPath)
+        },
+        {
+          message: /Invalid YAML/,
+        }
+      )
+    })
+
+    test('should auto-detect YAML format by content', async () => {
+      const configPath = join(tempDir, 'config.txt')
+      const yamlContent = `---
+base: test-base
+name: test-project
+`
+      await writeFile(configPath, yamlContent)
+
+      const loaded = loadConfig(configPath)
+      strictEqual(loaded.base, 'test-base')
+      strictEqual(loaded.name, 'test-project')
+    })
+
+    test('should auto-detect JSON format by content', async () => {
+      const configPath = join(tempDir, 'config.txt')
+      const jsonContent = JSON.stringify({
+        base: 'test-base',
+        name: 'test-project',
+      })
+      await writeFile(configPath, jsonContent)
+
+      const loaded = loadConfig(configPath)
+      strictEqual(loaded.base, 'test-base')
+      strictEqual(loaded.name, 'test-project')
     })
   })
 

@@ -1,9 +1,7 @@
-import chalk from 'chalk'
-
 export const logger = {
-  info: (message: string) => console.log(chalk.blue(`ℹ ${message}`)),
-  success: (message: string) => console.log(chalk.green(`✓ ${message}`)),
-  warn: (message: string) => console.warn(chalk.yellow(`⚠ ${message}`)),
-  error: (message: string) => console.error(chalk.red(`✗ ${message}`)),
-  step: (message: string) => console.log(chalk.cyan(`→ ${message}`)),
+  info: (_message: string) => {},
+  success: (_message: string) => {},
+  warn: (_message: string) => {},
+  error: (_message: string) => {},
+  step: (_message: string) => {},
 }

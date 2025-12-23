@@ -37,7 +37,7 @@ export async function generateTurboJson(outputDir: string): Promise<void> {
 
   await writeFile(
     join(outputDir, 'turbo.json'),
-    JSON.stringify(turboJson, null, 2) + '\n'
+    `${JSON.stringify(turboJson, null, 2)}\n`
   )
 }
 
@@ -90,7 +90,7 @@ export async function generateMonorepoTsConfig(
 
   await writeFile(
     join(outputDir, 'tsconfig.json'),
-    JSON.stringify(tsconfig, null, 2) + '\n'
+    `${JSON.stringify(tsconfig, null, 2)}\n`
   )
 }
 

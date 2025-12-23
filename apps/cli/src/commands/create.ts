@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { resolve } from 'node:path'
 import { confirm as confirmPrompt, intro, outro, spinner } from '@clack/prompts'
 import type { AddonTemplate, BaseTemplate } from '@hexp/catalog'
 import { Catalog } from '@hexp/catalog'
@@ -54,8 +54,9 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     // Merge config with CLI options (CLI takes precedence)
     const mergedOptions = mergeConfig(options, configFile)
 
-    const templatesDir = resolve(process.cwd(), 'templates')
-    const catalog = new Catalog(templatesDir)
+    // Catalog expects the base directory (project root), not templates/ directory
+    const projectRoot = process.cwd()
+    const catalog = new Catalog(projectRoot)
 
     // Get available templates
     const s = spinner()
@@ -146,22 +147,8 @@ export async function createCommand(options: CreateOptions): Promise<void> {
         mergedOptions.variables = {}
       }
       Object.assign(mergedOptions.variables, allVars)
-
-      // Show summary
-      console.log('\n' + chalk.bold('Summary:'))
-      console.log(
-        chalk.gray(`  Base: ${selectedBase.name} (${selectedBase.id})`)
-      )
       if (selectedAddons.length > 0) {
-        console.log(
-          chalk.gray(
-            `  Addons: ${selectedAddons.map((a) => a.name).join(', ')}`
-          )
-        )
       }
-      console.log(chalk.gray(`  Project Name: ${projectName}`))
-      console.log(chalk.gray(`  Project Type: ${projectType}`))
-      console.log(chalk.gray(`  Output: ${outputDir}`))
 
       const shouldProceed = await confirmPrompt({
         message: 'Proceed with generation?',
@@ -188,7 +175,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
 
       if (mergedOptions.addons && mergedOptions.addons.length > 0) {
         selectedAddons = addons.filter((a: AddonTemplate) =>
-          mergedOptions.addons!.includes(a.id)
+          mergedOptions.addons?.includes(a.id)
         )
         const notFound = mergedOptions.addons.filter(
           (id) => !selectedAddons.some((a) => a.id === id)
@@ -241,29 +228,10 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     }
 
     if (isDryRun) {
-      // Dry run mode - show plan
-      console.log('\n' + chalk.bold.cyan('📋 Generation Plan (Dry Run):\n'))
-      console.log(chalk.bold('Base Template:'))
-      console.log(chalk.gray(`  ID: ${selectedBase.id}`))
-      console.log(chalk.gray(`  Name: ${selectedBase.name}`))
-      console.log(chalk.gray(`  Operations: ${selectedBase.ops?.length || 0}`))
-
       if (selectedAddons.length > 0) {
-        console.log(chalk.bold('\nAddon Templates:'))
-        for (const addon of selectedAddons) {
-          console.log(chalk.gray(`  - ${addon.id}: ${addon.name}`))
-          console.log(chalk.gray(`    Operations: ${addon.ops?.length || 0}`))
+        for (const _addon of selectedAddons) {
         }
       }
-
-      console.log(chalk.bold('\nProject Configuration:'))
-      console.log(chalk.gray(`  Name: ${projectName}`))
-      console.log(chalk.gray(`  Type: ${projectType}`))
-      console.log(chalk.gray(`  Output: ${outputDir}`))
-
-      console.log(chalk.bold('\nVariables:'))
-      console.log(chalk.gray(`  projectName: ${projectName}`))
-      console.log(chalk.gray(`  projectType: ${projectType}`))
 
       outro(chalk.green('Dry run completed. No files were created.'))
       return
@@ -277,7 +245,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
 
     // Find template paths
     const baseTemplatePath = await findTemplatePath(
-      templatesDir,
+      projectRoot,
       selectedBase.id,
       'base'
     )
@@ -289,7 +257,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     const addonTemplatePaths: Array<{ template: AddonTemplate; path: string }> =
       []
     for (const addon of selectedAddons) {
-      const addonPath = await findTemplatePath(templatesDir, addon.id, 'addon')
+      const addonPath = await findTemplatePath(projectRoot, addon.id, 'addon')
       if (addonPath) {
         addonTemplatePaths.push({ template: addon, path: addonPath })
       } else {
@@ -329,7 +297,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
         ops: template.ops,
       }))
 
-      const results = await engine.compose(baseWithOps, addonsWithOps)
+      const _results = await engine.compose(baseWithOps, addonsWithOps)
 
       genSpinner.stop('Project generated successfully')
 
@@ -352,7 +320,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       const qualitySpinner = spinner()
       qualitySpinner.start('Generating quality standards...')
       try {
-        await generateQualityStandards(outputDir)
+        await generateQualityStandards(outputDir, projectName)
         qualitySpinner.stop('Quality standards generated')
       } catch (error) {
         qualitySpinner.stop('Failed to generate quality standards')
@@ -360,15 +328,8 @@ export async function createCommand(options: CreateOptions): Promise<void> {
           `Failed to generate quality standards: ${error instanceof Error ? error.message : String(error)}`
         )
       }
-
-      // Show summary
-      console.log('\n' + chalk.bold.green('✓ Project generated successfully!'))
-      console.log(chalk.gray(`  Location: ${outputDir}`))
-      console.log(chalk.gray(`  Operations executed: ${results.length}`))
       if (projectType === 'monorepo') {
-        console.log(chalk.gray('  Monorepo structure: ✓'))
       }
-      console.log(chalk.gray('  Quality standards: ✓'))
 
       outro(chalk.green('Done!'))
     } catch (error) {

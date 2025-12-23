@@ -6,7 +6,6 @@ export async function selectBase(
   bases: BaseTemplate[]
 ): Promise<BaseTemplate | null> {
   if (bases.length === 0) {
-    console.error(chalk.red('No base templates available'))
     return null
   }
 

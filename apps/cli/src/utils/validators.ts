@@ -25,7 +25,7 @@ export function validateCompatibility(
     // Check for conflicts between addons
     if (addon.conflicts && addon.conflicts.length > 0) {
       const conflicting = addons.filter(
-        (a) => a.id !== addon.id && addon.conflicts!.includes(a.id)
+        (a) => a.id !== addon.id && addon.conflicts?.includes(a.id)
       )
       if (conflicting.length > 0) {
         errors.push(

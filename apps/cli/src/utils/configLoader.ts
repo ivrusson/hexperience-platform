@@ -1,52 +1,117 @@
 import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
-import { logger } from './logger.js'
+import { extname, resolve } from 'node:path'
+import yaml from 'js-yaml'
+import { z } from 'zod'
 
-export interface ConfigFile {
-  base?: string
-  addons?: string[]
-  name?: string
-  monorepo?: boolean
-  single?: boolean
-  output?: string
-  variables?: Record<string, unknown>
+const ConfigSchema = z.object({
+  base: z.string().min(1).optional(),
+  addons: z.array(z.string()).optional(),
+  name: z.string().min(1).optional(),
+  monorepo: z.boolean().optional(),
+  single: z.boolean().optional(),
+  output: z.string().optional(),
+  variables: z.record(z.unknown()).optional(),
+})
+
+export type ConfigFile = z.infer<typeof ConfigSchema>
+
+/**
+ * Detect if content is YAML format
+ */
+function isYamlContent(content: string): boolean {
+  const trimmed = content.trim()
+  // YAML typically starts with --- or has key: value patterns without { or [
+  return (
+    trimmed.startsWith('---') ||
+    (trimmed.includes(':') &&
+      !trimmed.startsWith('{') &&
+      !trimmed.startsWith('['))
+  )
 }
 
 /**
- * Load configuration from a JSON file
+ * Detect format by file extension
+ */
+function detectFormatByExtension(filePath: string): 'yaml' | 'json' | 'auto' {
+  const ext = extname(filePath).toLowerCase()
+  if (ext === '.yaml' || ext === '.yml') {
+    return 'yaml'
+  }
+  if (ext === '.json') {
+    return 'json'
+  }
+  return 'auto'
+}
+
+/**
+ * Parse content based on format
+ */
+function parseContent(
+  content: string,
+  format: 'yaml' | 'json' | 'auto'
+): unknown {
+  if (format === 'json') {
+    return JSON.parse(content)
+  }
+  if (format === 'yaml') {
+    try {
+      return yaml.load(content, { schema: yaml.DEFAULT_SCHEMA })
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Invalid YAML in config file: ${error.message}`)
+      }
+      throw error
+    }
+  }
+  // Auto-detect format
+  if (isYamlContent(content)) {
+    try {
+      return yaml.load(content, { schema: yaml.DEFAULT_SCHEMA })
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Invalid YAML in config file: ${error.message}`)
+      }
+      throw error
+    }
+  }
+  // Default to JSON
+  try {
+    return JSON.parse(content)
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      throw new Error(`Invalid JSON in config file: ${error.message}`)
+    }
+    throw error
+  }
+}
+
+/**
+ * Load configuration from a JSON or YAML file
  */
 export function loadConfig(configPath: string): ConfigFile {
   try {
     const resolvedPath = resolve(configPath)
     const content = readFileSync(resolvedPath, 'utf-8')
-    const config = JSON.parse(content) as ConfigFile
+    const format = detectFormatByExtension(resolvedPath)
+    const parsed = parseContent(content, format)
 
-    // Validate config structure
-    if (config.base && typeof config.base !== 'string') {
-      throw new Error('Config "base" must be a string')
-    }
-    if (config.addons && !Array.isArray(config.addons)) {
-      throw new Error('Config "addons" must be an array')
-    }
-    if (config.name && typeof config.name !== 'string') {
-      throw new Error('Config "name" must be a string')
-    }
-    if (config.output && typeof config.output !== 'string') {
-      throw new Error('Config "output" must be a string')
-    }
-    if (config.variables && typeof config.variables !== 'object') {
-      throw new Error('Config "variables" must be an object')
-    }
-
+    // Validate with Zod schema
+    const config = ConfigSchema.parse(parsed)
     return config
   } catch (error) {
-    if (error instanceof SyntaxError) {
-      throw new Error(`Invalid JSON in config file: ${error.message}`)
+    if (error instanceof z.ZodError) {
+      const errors = error.errors
+        .map((e) => `${e.path.join('.')}: ${e.message}`)
+        .join(', ')
+      throw new Error(`Config validation failed: ${errors}`)
     }
     if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
       throw new Error(`Config file not found: ${configPath}`)
     }
-    throw error
+    if (error instanceof Error) {
+      throw error
+    }
+    throw new Error(`Failed to load config: ${String(error)}`)
   }
 }
 
