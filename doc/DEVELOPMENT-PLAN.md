@@ -45,35 +45,35 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 
 #### US-2.1: Como desarrollador, quiero renderizar una base template
 **Tareas:**
-- [ ] Definir interfaz `Operation` y tipos de operaciones base
-- [ ] Implementar `Workspace.create()` para crear directorio temporal de trabajo
-- [ ] Implementar operación `copy`: copiar archivos desde template a workspace
-- [ ] Implementar operación `templateRender`: renderizar archivos con variables (Mustache/EJS)
-- [ ] Crear `TemplateRenderer` con soporte para variables de prompts
-- [ ] Manejar errores de lectura/escritura de archivos
+- [x] Definir interfaz `Operation` y tipos de operaciones base
+- [x] Implementar `Workspace.create()` para crear directorio temporal de trabajo
+- [x] Implementar operación `copy`: copiar archivos desde template a workspace
+- [x] Implementar operación `templateRender`: renderizar archivos con variables (Mustache/EJS)
+- [x] Crear `TemplateRenderer` con soporte para variables de prompts
+- [x] Manejar errores de lectura/escritura de archivos
 - [ ] Tests para operaciones copy y templateRender
 
 #### US-2.2: Como desarrollador, quiero aplicar addons sobre un proyecto base
 **Tareas:**
-- [ ] Implementar `Engine.applyAddon()` que ejecuta las ops de un addon
-- [ ] Implementar pipeline de operaciones en orden secuencial
-- [ ] Manejar errores y rollback parcial si falla una operación
+- [x] Implementar `Engine.applyAddon()` que ejecuta las ops de un addon
+- [x] Implementar pipeline de operaciones en orden secuencial
+- [x] Manejar errores y rollback parcial si falla una operación
 - [ ] Tests para aplicación de addons con múltiples ops
 
 #### US-2.3: Como desarrollador, quiero mergear configuraciones JSON
 **Tareas:**
-- [ ] Implementar operación `jsonMerge`: merge profundo de objetos JSON
-- [ ] Soporte para merge de `package.json`, `tsconfig.json`, etc.
-- [ ] Validar JSON resultante después del merge
-- [ ] Manejar conflictos de claves (estrategias: overwrite, merge, skip)
+- [x] Implementar operación `jsonMerge`: merge profundo de objetos JSON
+- [x] Soporte para merge de `package.json`, `tsconfig.json`, etc.
+- [x] Validar JSON resultante después del merge
+- [x] Manejar conflictos de claves (estrategias: overwrite, merge, skip)
 - [ ] Tests para jsonMerge con casos complejos (arrays, objetos anidados)
 
 #### US-2.4: Como desarrollador, quiero insertar/reemplazar texto en archivos
 **Tareas:**
-- [ ] Implementar operación `textInsert`: insertar texto en posición específica
-- [ ] Implementar operación `textReplace`: reemplazar texto por patrón
-- [ ] Soporte para marcadores (markers) como `// @addon:auth`
-- [ ] Validar que los marcadores existen antes de insertar
+- [x] Implementar operación `textInsert`: insertar texto en posición específica
+- [x] Implementar operación `textReplace`: reemplazar texto por patrón
+- [x] Soporte para marcadores (markers) como `// @addon:auth`
+- [x] Validar que los marcadores existen antes de insertar
 - [ ] Tests para textInsert y textReplace
 
 ---
