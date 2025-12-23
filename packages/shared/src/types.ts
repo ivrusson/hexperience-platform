@@ -2,6 +2,8 @@
  * Base types for Hexperience Platform templates
  */
 
+import type { Operation } from './operations.js'
+
 /**
  * Type of template
  */
@@ -30,16 +32,6 @@ export interface Prompt {
   required?: boolean
   /** Validation message if validation fails */
   validation?: string
-}
-
-/**
- * Base operation structure (to be extended in Hito 2)
- */
-export interface Operation {
-  /** Type of operation */
-  type: string
-  /** Operation-specific data */
-  [key: string]: unknown
 }
 
 /**
