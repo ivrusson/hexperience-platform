@@ -8,4 +8,5 @@ export interface Workspace {
   create(): Promise<void>
   cleanup(): Promise<void>
   exists(): boolean
+  resolvePath(relativePath: string): string
 }
