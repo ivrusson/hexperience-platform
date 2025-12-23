@@ -51,14 +51,14 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 - [x] Implementar operación `templateRender`: renderizar archivos con variables (Mustache/EJS)
 - [x] Crear `TemplateRenderer` con soporte para variables de prompts
 - [x] Manejar errores de lectura/escritura de archivos
-- [ ] Tests para operaciones copy y templateRender
+- [x] Tests para operaciones copy y templateRender
 
 #### US-2.2: Como desarrollador, quiero aplicar addons sobre un proyecto base
 **Tareas:**
 - [x] Implementar `Engine.applyAddon()` que ejecuta las ops de un addon
 - [x] Implementar pipeline de operaciones en orden secuencial
 - [x] Manejar errores y rollback parcial si falla una operación
-- [ ] Tests para aplicación de addons con múltiples ops
+- [x] Tests para aplicación de addons con múltiples ops
 
 #### US-2.3: Como desarrollador, quiero mergear configuraciones JSON
 **Tareas:**
@@ -66,7 +66,7 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 - [x] Soporte para merge de `package.json`, `tsconfig.json`, etc.
 - [x] Validar JSON resultante después del merge
 - [x] Manejar conflictos de claves (estrategias: overwrite, merge, skip)
-- [ ] Tests para jsonMerge con casos complejos (arrays, objetos anidados)
+- [x] Tests para jsonMerge con casos complejos (arrays, objetos anidados)
 
 #### US-2.4: Como desarrollador, quiero insertar/reemplazar texto en archivos
 **Tareas:**
@@ -74,7 +74,7 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 - [x] Implementar operación `textReplace`: reemplazar texto por patrón
 - [x] Soporte para marcadores (markers) como `// @addon:auth`
 - [x] Validar que los marcadores existen antes de insertar
-- [ ] Tests para textInsert y textReplace
+- [x] Tests para textInsert y textReplace
 
 ---
 
@@ -86,31 +86,31 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 
 #### US-3.1: Como usuario, quiero ver las bases y addons disponibles
 **Tareas:**
-- [ ] Instalar y configurar Commander.js
-- [ ] Implementar comando `list` que muestra bases y addons
-- [ ] Formato de salida legible (tabla o lista, usar `chalk` para colores)
-- [ ] Mostrar metadata relevante (descripción, capabilities, projectType)
-- [ ] Integrar con Catalog para obtener templates
-- [ ] Opciones: `--bases`, `--addons`, `--all`
+- [x] Instalar y configurar Commander.js
+- [x] Implementar comando `list` que muestra bases y addons
+- [x] Formato de salida legible (tabla o lista, usar `chalk` para colores)
+- [x] Mostrar metadata relevante (descripción, capabilities, projectType)
+- [x] Integrar con Catalog para obtener templates
+- [x] Opciones: `--bases`, `--addons`, `--all`
 - [ ] Tests de CLI con output capturado
 
 #### US-3.2: Como usuario, quiero generar un proyecto de forma interactiva
 **Tareas:**
-- [ ] Instalar y configurar @clack/prompts
-- [ ] Implementar modo interactivo con Clack
-- [ ] Prompt para seleccionar tipo de proyecto (single vs monorepo)
-- [ ] Prompt para seleccionar base stack (con descripciones)
-- [ ] Prompt múltiple para seleccionar addons (checkbox con compatibilidad validada)
-- [ ] Prompt para variables requeridas (projectName, db, etc.)
+- [x] Instalar y configurar @clack/prompts
+- [x] Implementar modo interactivo con Clack
+- [x] Prompt para seleccionar tipo de proyecto (single vs monorepo)
+- [x] Prompt para seleccionar base stack (con descripciones)
+- [x] Prompt múltiple para seleccionar addons (checkbox con compatibilidad validada)
+- [x] Prompt para variables requeridas (projectName, db, etc.)
   - Usar `text`, `select`, `confirm`, `multiselect` según tipo
-- [ ] Mostrar resumen antes de generar
-- [ ] Validar inputs del usuario
-- [ ] Usar spinners (ora) durante generación
+- [x] Mostrar resumen antes de generar
+- [x] Validar inputs del usuario
+- [x] Usar spinners (ora) durante generación
 - [ ] Tests E2E del flujo interactivo
 
 #### US-3.3: Como usuario, quiero generar un proyecto de forma no-interactiva
 **Tareas:**
-- [ ] Implementar flags CLI con Commander.js:
+- [x] Implementar flags CLI con Commander.js:
   - `--base <id>`: Seleccionar base
   - `--addons <ids...>`: Lista de addons
   - `--name <name>`: Nombre del proyecto
@@ -120,17 +120,17 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 - [ ] Soporte para archivo de configuración (`--config <file>`)
   - Formato JSON o YAML
   - Validar schema con Zod
-- [ ] Validar argumentos requeridos
-- [ ] Validar compatibilidad de base/addons en modo no-interactivo
-- [ ] Mostrar ayuda con `--help` (auto-generada por Commander)
+- [x] Validar argumentos requeridos
+- [x] Validar compatibilidad de base/addons en modo no-interactivo
+- [x] Mostrar ayuda con `--help` (auto-generada por Commander)
 - [ ] Tests de CLI no-interactivo
 
 #### US-3.4: Como usuario, quiero ver un preview antes de generar
 **Tareas:**
-- [ ] Implementar flag `--dry-run` o `--preview`
-- [ ] Mostrar plan de generación sin ejecutar
-- [ ] Listar archivos que se crearían/modificarían
-- [ ] Mostrar operaciones que se ejecutarían
+- [x] Implementar flag `--dry-run` o `--preview`
+- [x] Mostrar plan de generación sin ejecutar
+- [x] Listar archivos que se crearían/modificarían
+- [x] Mostrar operaciones que se ejecutarían
 - [ ] Tests de preview mode
 
 #### US-3.5: Como usuario, quiero usar una interfaz TUI para tareas complejas
