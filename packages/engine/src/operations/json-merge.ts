@@ -33,7 +33,7 @@ export async function executeJsonMerge(
         : operation.arrayMerge === 'merge'
           ? (destinationArray: unknown[], sourceArray: unknown[]) => {
               const result = [...destinationArray]
-              sourceArray.forEach((item, index) => {
+              sourceArray.forEach((item) => {
                 if (
                   typeof item === 'object' &&
                   item !== null &&
@@ -50,11 +50,11 @@ export async function executeJsonMerge(
                       item as Record<string, unknown>
                     )
                   } else {
-                    result[index] = item
+                    // No match found, append as new item
+                    result.push(item)
                   }
-                } else if (index < result.length) {
-                  result[index] = item
                 } else {
+                  // Non-object item, append
                   result.push(item)
                 }
               })
