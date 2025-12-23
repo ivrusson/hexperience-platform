@@ -14,7 +14,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "rslib build",
+    "build": "rslib build && cp dist/src/index.d.ts dist/index.d.ts 2>/dev/null || true",
     "dev": "rslib build --watch",
     "lint": "biome check .",
     "format": "biome format --write .",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@rslib/core": "^0.18.5",
-    "@types/mustache": "^4.2.5",
+    "@types/mustache": "^4.2.6",
     "@types/node": "^24.10.4",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"

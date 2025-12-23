@@ -6,7 +6,7 @@ import type {
   JsonMergeOperation,
   OperationResult,
 } from '@hexp/shared'
-import merge from 'deepmerge'
+import deepmerge from 'deepmerge'
 import { JsonMergeError, OperationError } from '../errors.js'
 
 export async function executeJsonMerge(
@@ -39,22 +39,14 @@ export async function executeJsonMerge(
                   item !== null &&
                   !Array.isArray(item)
                 ) {
-                  // Try to find matching item by 'name' key if it exists
-                  const itemName = (item as Record<string, unknown>).name
-                  const matchingIndex = itemName
-                    ? result.findIndex(
-                        (r) =>
-                          typeof r === 'object' &&
-                          r !== null &&
-                          !Array.isArray(r) &&
-                          (r as Record<string, unknown>).name === itemName
-                      )
-                    : -1
-
-                  if (matchingIndex >= 0) {
-                    // Merge with matching item by name
-                    result[matchingIndex] = merge(
-                      result[matchingIndex] as Record<string, unknown>,
+                  if (
+                    result[index] &&
+                    typeof result[index] === 'object' &&
+                    result[index] !== null &&
+                    !Array.isArray(result[index])
+                  ) {
+                    result[index] = deepmerge(
+                      result[index] as Record<string, unknown>,
                       item as Record<string, unknown>
                     )
                   } else {
@@ -69,7 +61,7 @@ export async function executeJsonMerge(
               return result
             }
           : undefined
-    const mergedData = merge(
+    const mergedData = deepmerge(
       existingData,
       operation.data,
       arrayMergeStrategy ? { arrayMerge: arrayMergeStrategy } : undefined

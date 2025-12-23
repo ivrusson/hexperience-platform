@@ -51,7 +51,7 @@ export interface Manifest {
   /** Prompts for user input (optional) */
   prompts?: Prompt[]
   /** Operations to execute (optional, for Hito 2) */
-  ops?: Operation[]
+  ops?: import('./operations.js').Operation[]
 }
 
 /**
