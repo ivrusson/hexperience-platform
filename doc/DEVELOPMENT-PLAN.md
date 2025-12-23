@@ -92,7 +92,7 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 - [x] Mostrar metadata relevante (descripción, capabilities, projectType)
 - [x] Integrar con Catalog para obtener templates
 - [x] Opciones: `--bases`, `--addons`, `--all`
-- [ ] Tests de CLI con output capturado
+- [x] Tests de CLI con output capturado
 
 #### US-3.2: Como usuario, quiero generar un proyecto de forma interactiva
 **Tareas:**
@@ -117,13 +117,13 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
   - `--monorepo`: Forzar tipo monorepo
   - `--single`: Forzar tipo single package
   - `--output <dir>`: Directorio de salida
-- [ ] Soporte para archivo de configuración (`--config <file>`)
-  - Formato JSON o YAML
-  - Validar schema con Zod
+- [x] Soporte para archivo de configuración (`--config <file>`)
+  - Formato JSON
+  - Validación de estructura
 - [x] Validar argumentos requeridos
 - [x] Validar compatibilidad de base/addons en modo no-interactivo
 - [x] Mostrar ayuda con `--help` (auto-generada por Commander)
-- [ ] Tests de CLI no-interactivo
+- [x] Tests de CLI no-interactivo
 
 #### US-3.4: Como usuario, quiero ver un preview antes de generar
 **Tareas:**
@@ -131,7 +131,7 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 - [x] Mostrar plan de generación sin ejecutar
 - [x] Listar archivos que se crearían/modificarían
 - [x] Mostrar operaciones que se ejecutarían
-- [ ] Tests de preview mode
+- [x] Tests de preview mode
 
 #### US-3.5: Como usuario, quiero usar una interfaz TUI para tareas complejas
 **Tareas:**
@@ -153,36 +153,36 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 
 #### US-3.6: Como usuario, quiero generar proyectos monorepo con Turbo
 **Tareas:**
-- [ ] Agregar opción `--monorepo` en CLI o prompt para tipo de proyecto
-- [ ] Generar estructura de monorepo (apps/, packages/)
-- [ ] Generar `turbo.json` base con tareas estándar (build, lint, type-check, format, test)
-- [ ] Generar `pnpm-workspace.yaml`
-- [ ] Configurar LeftHook en proyecto generado:
+- [x] Agregar opción `--monorepo` en CLI o prompt para tipo de proyecto
+- [x] Generar estructura de monorepo (apps/, packages/)
+- [x] Generar `turbo.json` base con tareas estándar (build, lint, type-check, format, test)
+- [x] Generar `pnpm-workspace.yaml`
+- [x] Configurar LeftHook en proyecto generado:
   - `.lefthook.yml` con hooks pre-commit, commit-msg, pre-push
   - Scripts para ejecutar Biome y commit-lint
-- [ ] Configurar commit-lint:
+- [x] Configurar commit-lint:
   - `commitlint.config.ts` con config-conventional
   - Integración con LeftHook
-- [ ] Configurar Biome.js:
+- [x] Configurar Biome.js:
   - `biome.json` con configuración monorepo-wide
   - Scripts en package.json raíz
-- [ ] Generar `tsconfig.json` base con project references
+- [x] Generar `tsconfig.json` base con project references
 - [ ] Tests para generación de monorepos
 
 #### US-3.7: Como usuario, quiero que los proyectos generados tengan estándares de calidad
 **Tareas:**
-- [ ] Generar `.lefthook.yml` con hooks estándar:
+- [x] Generar `.lefthook.yml` con hooks estándar:
   - pre-commit: Biome check/lint
   - commit-msg: commit-lint
   - pre-push: type-check (opcional)
-- [ ] Generar `commitlint.config.ts` con config-conventional
-- [ ] Generar `biome.json` con configuración estándar:
+- [x] Generar `commitlint.config.ts` con config-conventional
+- [x] Generar `biome.json` con configuración estándar:
   - Formatter (2 espacios, single quotes, etc.)
   - Linter con reglas recomendadas
   - VCS integration
 - [ ] Agregar scripts de calidad en package.json:
   - `lint`, `format`, `type-check`, `check`
-- [ ] Configurar `.gitignore` con patrones estándar
+- [x] Configurar `.gitignore` con patrones estándar
 - [ ] Documentar estándares en README generado
 - [ ] Tests de generación de estándares
 
