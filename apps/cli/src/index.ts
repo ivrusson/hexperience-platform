@@ -28,6 +28,7 @@ program
   .option('--monorepo', 'Force monorepo project type')
   .option('--single', 'Force single package project type')
   .option('--output <dir>', 'Output directory', process.cwd())
+  .option('--config <file>', 'Configuration file (JSON)')
   .option('--dry-run', 'Preview generation plan without executing')
   .option('--preview', 'Alias for --dry-run')
   .action(createCommand)

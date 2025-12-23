@@ -39,14 +39,16 @@ export async function executeJsonMerge(
                   item !== null &&
                   !Array.isArray(item)
                 ) {
-                  if (
-                    result[index] &&
-                    typeof result[index] === 'object' &&
-                    result[index] !== null &&
-                    !Array.isArray(result[index])
-                  ) {
-                    result[index] = deepmerge(
-                      result[index] as Record<string, unknown>,
+                  // Try to find a matching item in the destination array
+                  const matchingIndex = result.findIndex(
+                    (destItem) =>
+                      typeof destItem === 'object' &&
+                      destItem !== null &&
+                      !Array.isArray(destItem)
+                  )
+                  if (matchingIndex >= 0) {
+                    result[matchingIndex] = deepmerge(
+                      result[matchingIndex] as Record<string, unknown>,
                       item as Record<string, unknown>
                     )
                   } else {
