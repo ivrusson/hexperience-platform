@@ -1,0 +1,15 @@
+{
+  "id": "example-base",
+  "type": "base",
+  "name": "Example Base",
+  "description": "A simple example base template for testing",
+  "projectType": "single",
+  "capabilities": ["web-server"],
+  "ops": [
+    {
+      "type": "copy",
+      "from": "template/**",
+      "to": "."
+    }
+  ]
+}

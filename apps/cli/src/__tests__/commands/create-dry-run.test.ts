@@ -1,9 +1,9 @@
 import { existsSync } from 'node:fs'
 import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { join, resolve } from 'node:path'
+import { join } from 'node:path'
 import { describe, test } from 'node:test'
-import { createCommand } from '../commands/create.js'
+import { createCommand } from '../commands/create.ts'
 
 describe('create command - dry-run mode', () => {
   let tempDir: string

@@ -3,6 +3,7 @@
 import { Command } from 'commander'
 import { createCommand } from './commands/create.js'
 import { listCommand } from './commands/list.js'
+import { tuiCommand } from './commands/tui.jsx'
 
 const program = new Command()
 
@@ -28,10 +29,18 @@ program
   .option('--monorepo', 'Force monorepo project type')
   .option('--single', 'Force single package project type')
   .option('--output <dir>', 'Output directory', process.cwd())
-  .option('--config <file>', 'Configuration file (JSON)')
+  .option('--config <file>', 'Configuration file (JSON or YAML)')
   .option('--dry-run', 'Preview generation plan without executing')
   .option('--preview', 'Alias for --dry-run')
   .action(createCommand)
+
+program
+  .command('tui')
+  .description('Interactive TUI for complex tasks')
+  .argument('[subcommand]', 'Subcommand: models or monorepo', 'models')
+  .action((subcommand: string) => {
+    tuiCommand({ subcommand })
+  })
 
 // If no command provided, show help
 if (process.argv.length === 2) {

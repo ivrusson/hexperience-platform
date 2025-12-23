@@ -1,5 +1,7 @@
-import { writeFile } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
+import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import deepmerge from 'deepmerge'
 
 /**
  * Generate .lefthook.yml configuration file
@@ -151,7 +153,7 @@ export async function generateBiomeConfig(outputDir: string): Promise<void> {
 
   await writeFile(
     join(outputDir, 'biome.json'),
-    JSON.stringify(biomeJson, null, 2) + '\n'
+    `${JSON.stringify(biomeJson, null, 2)}\n`
   )
 }
 
@@ -210,13 +212,138 @@ Thumbs.db
 }
 
 /**
+ * Generate or update package.json with quality scripts
+ */
+export async function generatePackageJsonScripts(
+  outputDir: string,
+  projectName?: string
+): Promise<void> {
+  const packageJsonPath = join(outputDir, 'package.json')
+  const qualityScripts = {
+    scripts: {
+      lint: 'biome check .',
+      format: 'biome format --write .',
+      'type-check': 'tsc --noEmit',
+      check: 'pnpm lint && pnpm format && pnpm type-check',
+    },
+  }
+
+  let existingPackageJson: Record<string, unknown> = {}
+  if (existsSync(packageJsonPath)) {
+    try {
+      const content = await readFile(packageJsonPath, 'utf-8')
+      existingPackageJson = JSON.parse(content) as Record<string, unknown>
+    } catch (error) {
+      throw new Error(
+        `Failed to parse existing package.json: ${error instanceof Error ? error.message : String(error)}`
+      )
+    }
+  } else {
+    // Create basic package.json if it doesn't exist
+    existingPackageJson = {
+      name: projectName || 'project',
+      version: '0.0.0',
+      type: 'module',
+    }
+  }
+
+  // Merge scripts
+  const merged = deepmerge(existingPackageJson, qualityScripts)
+  const formattedJson = `${JSON.stringify(merged, null, 2)}\n`
+  await writeFile(packageJsonPath, formattedJson, 'utf-8')
+}
+
+/**
+ * Generate README.md with quality standards documentation
+ */
+export async function generateReadme(
+  outputDir: string,
+  projectName: string
+): Promise<void> {
+  const readmePath = join(outputDir, 'README.md')
+  const readmeContent = `# ${projectName}
+
+A project generated with Hexperience Platform.
+
+## Setup
+
+\`\`\`bash
+pnpm install
+\`\`\`
+
+## Quality Standards
+
+This project follows strict quality standards to ensure code consistency and maintainability.
+
+### Git Hooks (LeftHook)
+
+Git hooks are configured using [LeftHook](https://github.com/evilmartians/lefthook) to enforce quality checks:
+
+- **pre-commit**: Runs Biome check and format on staged files
+- **commit-msg**: Validates commit messages using commit-lint
+- **pre-push**: Runs type-check before pushing
+
+### Commit Messages (commit-lint)
+
+Commit messages follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
+
+\`\`\`
+<type>(<scope>): <subject>
+
+[optional body]
+
+[optional footer]
+\`\`\`
+
+**Types**: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+
+### Code Quality (Biome)
+
+Code formatting and linting are handled by [Biome](https://biomejs.dev/):
+
+- **Formatter**: Consistent code style (2 spaces, single quotes, etc.)
+- **Linter**: Catches common errors and enforces best practices
+- **VCS Integration**: Automatically formats staged files
+
+## Scripts
+
+- \`pnpm lint\`: Check code for linting errors
+- \`pnpm format\`: Format code with Biome
+- \`pnpm type-check\`: Run TypeScript type checking
+- \`pnpm check\`: Run all quality checks (lint, format, type-check)
+
+## Next Steps
+
+1. Review and customize the configuration files:
+   - \`biome.json\`: Adjust formatting and linting rules
+   - \`commitlint.config.ts\`: Customize commit message rules
+   - \`.lefthook.yml\`: Modify git hooks as needed
+
+2. Start developing:
+   \`\`\`bash
+   pnpm dev
+   \`\`\`
+
+3. Make your first commit following the conventional commits format.
+
+`
+
+  await writeFile(readmePath, readmeContent, 'utf-8')
+}
+
+/**
  * Generate all quality standards files
  */
 export async function generateQualityStandards(
-  outputDir: string
+  outputDir: string,
+  projectName?: string
 ): Promise<void> {
   await generateLefthookConfig(outputDir)
   await generateCommitlintConfig(outputDir)
   await generateBiomeConfig(outputDir)
   await generateGitignore(outputDir)
+  await generatePackageJsonScripts(outputDir, projectName)
+  if (projectName) {
+    await generateReadme(outputDir, projectName)
+  }
 }

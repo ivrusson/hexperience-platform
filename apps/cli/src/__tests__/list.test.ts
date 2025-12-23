@@ -2,8 +2,7 @@ import { strictEqual } from 'node:assert'
 import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { describe, mock, test } from 'node:test'
-import { Catalog } from '@hexp/catalog'
+import { describe, test } from 'node:test'
 import { listCommand } from '../commands/list.js'
 
 describe('listCommand', () => {
