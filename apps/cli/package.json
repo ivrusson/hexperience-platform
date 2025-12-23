@@ -24,9 +24,13 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@hexp/engine": "workspace:*",
+    "@clack/prompts": "^0.11.0",
     "@hexp/catalog": "workspace:*",
-    "@hexp/shared": "workspace:*"
+    "@hexp/engine": "workspace:*",
+    "@hexp/shared": "workspace:*",
+    "chalk": "^5.6.2",
+    "commander": "^14.0.2",
+    "ora": "^9.0.0"
   },
   "devDependencies": {
     "@rslib/core": "^0.18.5",

@@ -33,16 +33,6 @@ export interface Prompt {
 }
 
 /**
- * Base operation structure (to be extended in Hito 2)
- */
-export interface Operation {
-  /** Type of operation */
-  type: string
-  /** Operation-specific data */
-  [key: string]: unknown
-}
-
-/**
  * Base manifest structure shared by all templates
  */
 export interface Manifest {
@@ -59,7 +49,7 @@ export interface Manifest {
   /** Prompts for user input (optional) */
   prompts?: Prompt[]
   /** Operations to execute (optional, for Hito 2) */
-  ops?: Operation[]
+  ops?: import('./operations.js').Operation[]
 }
 
 /**

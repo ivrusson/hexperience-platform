@@ -6,7 +6,7 @@ import type {
   JsonMergeOperation,
   OperationResult,
 } from '@hexp/shared'
-import { merge } from 'deepmerge'
+import deepmerge from 'deepmerge'
 import { JsonMergeError, OperationError } from '../errors.js'
 
 export async function executeJsonMerge(
@@ -45,9 +45,9 @@ export async function executeJsonMerge(
                     result[index] !== null &&
                     !Array.isArray(result[index])
                   ) {
-                    result[index] = merge(
-                      [result[index] as Record<string, unknown>],
-                      [item as Record<string, unknown>]
+                    result[index] = deepmerge(
+                      result[index] as Record<string, unknown>,
+                      item as Record<string, unknown>
                     )
                   } else {
                     result[index] = item
@@ -61,9 +61,9 @@ export async function executeJsonMerge(
               return result
             }
           : undefined
-    const mergedData = merge(
-      [existingData],
-      [operation.data],
+    const mergedData = deepmerge(
+      existingData,
+      operation.data,
       arrayMergeStrategy ? { arrayMerge: arrayMergeStrategy } : undefined
     )
     const targetDir = dirname(targetPath)
