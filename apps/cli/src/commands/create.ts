@@ -8,7 +8,10 @@ import chalk from 'chalk'
 import { collectVars } from '../prompts/collectVars.js'
 import { selectAddons } from '../prompts/selectAddons.js'
 import { selectBase } from '../prompts/selectBase.js'
+import { loadConfig, mergeConfig } from '../utils/configLoader.js'
 import { logger } from '../utils/logger.js'
+import { generateMonorepoFiles } from '../utils/monorepoGenerator.js'
+import { generateQualityStandards } from '../utils/qualityStandardsGenerator.js'
 import { findTemplatePath } from '../utils/templatePath.js'
 import {
   validateCompatibility,
@@ -22,8 +25,10 @@ interface CreateOptions {
   monorepo?: boolean
   single?: boolean
   output?: string
+  config?: string
   dryRun?: boolean
   preview?: boolean
+  variables?: Record<string, unknown>
 }
 
 export async function createCommand(options: CreateOptions): Promise<void> {
@@ -31,6 +36,23 @@ export async function createCommand(options: CreateOptions): Promise<void> {
 
   try {
     intro(chalk.bold.cyan('Create Hexperience Project'))
+
+    // Load config file if provided
+    let configFile
+    if (options.config) {
+      try {
+        configFile = loadConfig(options.config)
+        logger.info(`Loaded configuration from ${options.config}`)
+      } catch (error) {
+        logger.error(
+          `Failed to load config file: ${error instanceof Error ? error.message : String(error)}`
+        )
+        process.exit(1)
+      }
+    }
+
+    // Merge config with CLI options (CLI takes precedence)
+    const mergedOptions = mergeConfig(options, configFile)
 
     const templatesDir = resolve(process.cwd(), 'templates')
     const catalog = new Catalog(templatesDir)
@@ -48,17 +70,17 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     }
 
     // Determine if we're in interactive or non-interactive mode
-    const isInteractive = !options.base && !options.name
+    const isInteractive = !mergedOptions.base && !mergedOptions.name
 
     let selectedBase: BaseTemplate | null = null
     let selectedAddons: AddonTemplate[] = []
-    let projectName = options.name || ''
-    let projectType: 'monorepo' | 'single' | undefined = options.monorepo
+    let projectName = mergedOptions.name || ''
+    let projectType: 'monorepo' | 'single' | undefined = mergedOptions.monorepo
       ? 'monorepo'
-      : options.single
+      : mergedOptions.single
         ? 'single'
         : undefined
-    let outputDir = options.output || process.cwd()
+    let outputDir = mergedOptions.output || process.cwd()
 
     if (isInteractive) {
       // Interactive mode
@@ -110,13 +132,20 @@ export async function createCommand(options: CreateOptions): Promise<void> {
         Object.assign(addonVars, vars)
       }
 
-      // Merge all variables
+      // Merge all variables (config file variables take precedence over prompts)
       const allVars = {
         projectName,
         projectType,
         ...baseVars,
         ...addonVars,
+        ...(mergedOptions.variables || {}),
       }
+
+      // Store for later use in context
+      if (!mergedOptions.variables) {
+        mergedOptions.variables = {}
+      }
+      Object.assign(mergedOptions.variables, allVars)
 
       // Show summary
       console.log('\n' + chalk.bold('Summary:'))
@@ -145,23 +174,23 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       }
     } else {
       // Non-interactive mode
-      if (!options.base) {
+      if (!mergedOptions.base) {
         logger.error('--base is required in non-interactive mode')
         process.exit(1)
       }
 
       selectedBase =
-        bases.find((b: BaseTemplate) => b.id === options.base!) || null
+        bases.find((b: BaseTemplate) => b.id === mergedOptions.base!) || null
       if (!selectedBase) {
-        logger.error(`Base template "${options.base}" not found`)
+        logger.error(`Base template "${mergedOptions.base}" not found`)
         process.exit(1)
       }
 
-      if (options.addons && options.addons.length > 0) {
+      if (mergedOptions.addons && mergedOptions.addons.length > 0) {
         selectedAddons = addons.filter((a: AddonTemplate) =>
-          options.addons!.includes(a.id)
+          mergedOptions.addons!.includes(a.id)
         )
-        const notFound = options.addons.filter(
+        const notFound = mergedOptions.addons.filter(
           (id) => !selectedAddons.some((a) => a.id === id)
         )
         if (notFound.length > 0) {
@@ -185,6 +214,13 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       } else if (!projectType) {
         projectType = 'single'
       }
+
+      // Merge config variables if provided
+      if (!mergedOptions.variables) {
+        mergedOptions.variables = {}
+      }
+      mergedOptions.variables.projectName = projectName
+      mergedOptions.variables.projectType = projectType
     }
 
     // Validate compatibility
@@ -261,12 +297,16 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       }
     }
 
+    // Merge variables from config file if in non-interactive mode
+    const contextVariables: Record<string, unknown> = {
+      projectName,
+      projectType,
+      ...(mergedOptions.variables || {}),
+    }
+
     // Create execution context
     const context = {
-      variables: {
-        projectName,
-        projectType,
-      },
+      variables: contextVariables,
       templateRoot: baseTemplatePath,
       workspaceRoot: outputDir,
     }
@@ -293,10 +333,42 @@ export async function createCommand(options: CreateOptions): Promise<void> {
 
       genSpinner.stop('Project generated successfully')
 
+      // Generate monorepo files if project type is monorepo
+      if (projectType === 'monorepo') {
+        const monoSpinner = spinner()
+        monoSpinner.start('Generating monorepo structure...')
+        try {
+          await generateMonorepoFiles(outputDir)
+          monoSpinner.stop('Monorepo structure generated')
+        } catch (error) {
+          monoSpinner.stop('Failed to generate monorepo structure')
+          logger.warn(
+            `Failed to generate monorepo files: ${error instanceof Error ? error.message : String(error)}`
+          )
+        }
+      }
+
+      // Generate quality standards files
+      const qualitySpinner = spinner()
+      qualitySpinner.start('Generating quality standards...')
+      try {
+        await generateQualityStandards(outputDir)
+        qualitySpinner.stop('Quality standards generated')
+      } catch (error) {
+        qualitySpinner.stop('Failed to generate quality standards')
+        logger.warn(
+          `Failed to generate quality standards: ${error instanceof Error ? error.message : String(error)}`
+        )
+      }
+
       // Show summary
       console.log('\n' + chalk.bold.green('✓ Project generated successfully!'))
       console.log(chalk.gray(`  Location: ${outputDir}`))
       console.log(chalk.gray(`  Operations executed: ${results.length}`))
+      if (projectType === 'monorepo') {
+        console.log(chalk.gray('  Monorepo structure: ✓'))
+      }
+      console.log(chalk.gray('  Quality standards: ✓'))
 
       outro(chalk.green('Done!'))
     } catch (error) {
