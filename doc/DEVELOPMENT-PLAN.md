@@ -196,35 +196,35 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 
 #### US-4.1: Como desarrollador, quiero validar compatibilidad base-addon
 **Tareas:**
-- [ ] Implementar `CompatibilityChecker.check()` que valida requires/provides
-- [ ] Verificar que base provee todas las capabilities requeridas por addons
-- [ ] Generar matriz de compatibilidad
-- [ ] Mensajes de error claros cuando falta una capability
-- [ ] Tests de compatibilidad con casos válidos e inválidos
+- [x] Implementar `CompatibilityChecker.check()` que valida requires/provides
+- [x] Verificar que base provee todas las capabilities requeridas por addons
+- [x] Generar matriz de compatibilidad
+- [x] Mensajes de error claros cuando falta una capability
+- [x] Tests de compatibilidad con casos válidos e inválidos
 
 #### US-4.2: Como desarrollador, quiero detectar conflictos entre addons
 **Tareas:**
-- [ ] Implementar detección de conflictos usando array `conflicts` en manifest
-- [ ] Validar que addons seleccionados no se conflictúan entre sí
-- [ ] Mensajes de error explicando conflictos
-- [ ] Sugerencias de addons alternativos si hay conflicto
-- [ ] Tests de detección de conflictos
+- [x] Implementar detección de conflictos usando array `conflicts` en manifest
+- [x] Validar que addons seleccionados no se conflictúan entre sí
+- [x] Mensajes de error explicando conflictos
+- [x] Sugerencias de addons alternativos si hay conflicto
+- [x] Tests de detección de conflictos
 
 #### US-4.3: Como desarrollador, quiero resolver orden de aplicación de addons
 **Tareas:**
-- [ ] Implementar `DependencyResolver.resolve()` que ordena addons por dependencias
-- [ ] Usar `requires` para construir grafo de dependencias
-- [ ] Detectar ciclos en dependencias
-- [ ] Aplicar orden topológico
-- [ ] Tests de resolución de orden con casos complejos
+- [x] Implementar `DependencyResolver.resolve()` que ordena addons por dependencias
+- [x] Usar `requires` para construir grafo de dependencias
+- [x] Detectar ciclos en dependencias
+- [x] Aplicar orden topológico
+- [x] Tests de resolución de orden con casos complejos
 
 #### US-4.4: Como desarrollador, quiero validar que no hay colisiones de archivos
 **Tareas:**
-- [ ] Implementar `FileCollisionDetector.check()` que detecta archivos duplicados
-- [ ] Validar antes de aplicar operaciones
-- [ ] Permitir overwrite explícito con flag o configuración
-- [ ] Mostrar lista de archivos que colisionarían
-- [ ] Tests de detección de colisiones
+- [x] Implementar `FileCollisionDetector.check()` que detecta archivos duplicados
+- [x] Validar antes de aplicar operaciones
+- [x] Permitir overwrite explícito con flag o configuración
+- [x] Mostrar lista de archivos que colisionarían
+- [x] Tests de detección de colisiones
 
 ---
 
