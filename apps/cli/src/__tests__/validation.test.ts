@@ -12,7 +12,7 @@ describe('validation integration', () => {
   let templatesDir: string
 
   test.beforeEach(async () => {
-    const tempPrefix = join(tmpdir(), 'hexp-validation-test-')
+    const tempPrefix = join(tmpdir(), `hexp-validation-test-${Date.now()}`)
     tempDir = await mkdir(tempPrefix, {
       recursive: true,
     })
