@@ -2,10 +2,13 @@ import type {
   ExecutionContext,
   Operation,
   OperationResult,
+  PostStep,
+  PostStepResult,
   Workspace,
 } from '@hexp/shared'
 import { OperationError } from './errors.js'
 import { executeOperation } from './operations/index.js'
+import { executePostStep } from './post-steps/index.js'
 
 export interface TemplateWithOps {
   templateDir: string
@@ -61,7 +64,8 @@ export class Engine {
   }
   async compose(
     base: TemplateWithOps,
-    addons: TemplateWithOps[]
+    addons: TemplateWithOps[],
+    postSteps?: PostStep[]
   ): Promise<OperationResult[]> {
     const allResults: OperationResult[] = []
     if (!this.workspace.exists()) {
@@ -73,7 +77,33 @@ export class Engine {
       const addonResults = await this.applyAddon(addon)
       allResults.push(...addonResults)
     }
+
+    // Execute post-steps if provided
+    if (postSteps && postSteps.length > 0) {
+      await this.executePostSteps(postSteps)
+    }
+
     return allResults
+  }
+
+  async executePostSteps(postSteps: PostStep[]): Promise<PostStepResult[]> {
+    const results: PostStepResult[] = []
+    for (const step of postSteps) {
+      try {
+        const result = await executePostStep(
+          step,
+          this.workspace.root,
+          this.context.variables
+        )
+        results.push(result)
+      } catch (error) {
+        results.push({
+          success: false,
+          error: `Failed to execute post-step ${step.type}: ${error instanceof Error ? error.message : String(error)}`,
+        })
+      }
+    }
+    return results
   }
 }
 

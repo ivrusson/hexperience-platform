@@ -19,13 +19,14 @@
     "lint": "biome check .",
     "format": "biome format --write .",
     "type-check": "tsc --noEmit",
-    "test": "node --import tsx --test src/__tests__/workspace.test.ts src/__tests__/engine.test.ts src/__tests__/operations/copy.test.ts src/__tests__/operations/template-render.test.ts src/__tests__/operations/json-merge.test.ts src/__tests__/operations/text-insert.test.ts src/__tests__/operations/text-replace.test.ts"
+    "test": "node --import tsx --test src/__tests__/workspace.test.ts src/__tests__/engine.test.ts src/__tests__/operations/copy.test.ts src/__tests__/operations/template-render.test.ts src/__tests__/operations/json-merge.test.ts src/__tests__/operations/text-insert.test.ts src/__tests__/operations/text-replace.test.ts src/__tests__/operations/codemod.test.ts src/__tests__/operations/env-append.test.ts src/__tests__/post-steps/generate-docs.test.ts src/__tests__/post-steps/git-init.test.ts src/__tests__/post-steps/install-dependencies.test.ts src/__tests__/post-steps/format-code.test.ts src/__tests__/post-steps/lint-code.test.ts src/__tests__/post-steps/type-check.test.ts"
   },
   "dependencies": {
     "@hexp/catalog": "workspace:*",
     "@hexp/shared": "workspace:*",
     "deepmerge": "^4.3.1",
-    "mustache": "^4.2.0"
+    "mustache": "^4.2.0",
+    "ts-morph": "^27.0.2"
   },
   "devDependencies": {
     "@rslib/core": "^0.18.5",

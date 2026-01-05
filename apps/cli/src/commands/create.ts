@@ -4,30 +4,22 @@ import { confirm as confirmPrompt, intro, outro, spinner } from '@clack/prompts'
 import type { AddonTemplate, BaseTemplate } from '@hexp/catalog'
 import { Catalog } from '@hexp/catalog'
 import { createEngine, createWorkspace } from '@hexp/engine'
+import type { PostStep } from '@hexp/shared'
 import chalk from 'chalk'
 import { collectVars } from '../prompts/collectVars.js'
 import { selectAddons } from '../prompts/selectAddons.js'
 import { selectBase } from '../prompts/selectBase.js'
-import { loadConfig, mergeConfig } from '../utils/configLoader.js'
+import {
+  type CreateOptions,
+  loadConfig,
+  mergeConfig,
+} from '../utils/configLoader.js'
 import { logger } from '../utils/logger.js'
 import { generateMonorepoFiles } from '../utils/monorepoGenerator.js'
 import { generateQualityStandards } from '../utils/qualityStandardsGenerator.js'
 import { findTemplatePath } from '../utils/templatePath.js'
 import { validateGenerationPlan } from '../utils/validation.js'
 import { validateProjectName } from '../utils/validators.js'
-
-interface CreateOptions {
-  base?: string
-  addons?: string[]
-  name?: string
-  monorepo?: boolean
-  single?: boolean
-  output?: string
-  config?: string
-  dryRun?: boolean
-  preview?: boolean
-  variables?: Record<string, unknown>
-}
 
 export async function createCommand(options: CreateOptions): Promise<void> {
   const isDryRun = options.dryRun || options.preview
@@ -314,7 +306,83 @@ export async function createCommand(options: CreateOptions): Promise<void> {
         ops: template.ops,
       }))
 
-      const _results = await engine.compose(baseWithOps, addonsWithOps)
+      // Prepare post-steps
+      const postSteps: PostStep[] = []
+
+      // Install dependencies (default: true unless skipped)
+      if (!mergedOptions.skipInstall && mergedOptions.installDeps !== false) {
+        postSteps.push({
+          type: 'installDependencies',
+          enabled: true,
+          options: {},
+        })
+      }
+
+      // Format code (default: true unless skipped)
+      if (!mergedOptions.skipFormat && mergedOptions.formatCode !== false) {
+        postSteps.push({
+          type: 'formatCode',
+          enabled: true,
+          options: {},
+        })
+      }
+
+      // Lint code (default: true unless skipped)
+      if (!mergedOptions.skipLint && mergedOptions.lintCode !== false) {
+        postSteps.push({
+          type: 'lintCode',
+          enabled: true,
+          options: { failOnError: false },
+        })
+      }
+
+      // Type check (default: true unless skipped)
+      if (!mergedOptions.skipTypeCheck && mergedOptions.typeCheck !== false) {
+        postSteps.push({
+          type: 'typeCheck',
+          enabled: true,
+          options: { failOnError: false },
+        })
+      }
+
+      // Git init (default: false unless explicitly enabled)
+      if (
+        mergedOptions.gitInit ||
+        (!mergedOptions.skipGitInit && isInteractive)
+      ) {
+        const shouldInitGit = isInteractive
+          ? await confirmPrompt({
+              message: 'Initialize git repository?',
+              initialValue: true,
+            })
+          : mergedOptions.gitInit
+
+        if (shouldInitGit) {
+          postSteps.push({
+            type: 'gitInit',
+            enabled: true,
+            options: {
+              createInitialCommit: true,
+              commitMessage: 'Initial commit from hexperience platform',
+            },
+          })
+        }
+      }
+
+      // Generate docs (default: true unless skipped)
+      if (!mergedOptions.skipDocs && mergedOptions.generateDocs !== false) {
+        postSteps.push({
+          type: 'generateDocs',
+          enabled: true,
+          options: {},
+        })
+      }
+
+      const _results = await engine.compose(
+        baseWithOps,
+        addonsWithOps,
+        postSteps
+      )
 
       genSpinner.stop('Project generated successfully')
 
@@ -345,10 +413,20 @@ export async function createCommand(options: CreateOptions): Promise<void> {
           `Failed to generate quality standards: ${error instanceof Error ? error.message : String(error)}`
         )
       }
-      if (projectType === 'monorepo') {
-      }
-
+      // Show next steps
       outro(chalk.green('Done!'))
+      logger.info(chalk.cyan('\nNext steps:'))
+      logger.info(chalk.gray(`  cd ${projectName}`))
+      if (postSteps.some((s) => s.type === 'installDependencies')) {
+        logger.info(chalk.gray('  Dependencies have been installed'))
+      } else {
+        logger.info(
+          chalk.gray(`  ${projectType === 'monorepo' ? 'pnpm' : 'npm'} install`)
+        )
+      }
+      logger.info(
+        chalk.gray(`  ${projectType === 'monorepo' ? 'pnpm' : 'npm'} run dev`)
+      )
     } catch (error) {
       genSpinner.stop('Generation failed')
       logger.error(

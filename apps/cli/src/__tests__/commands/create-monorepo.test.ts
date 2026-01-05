@@ -4,7 +4,7 @@ import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
-import { createCommand } from '../commands/create.ts'
+import { createCommand } from '../commands/create'
 
 describe('create command - monorepo generation', () => {
   let tempDir: string
