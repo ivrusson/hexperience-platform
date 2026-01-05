@@ -38,6 +38,9 @@ importers:
       '@hexp/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@hexp/validation':
+        specifier: workspace:*
+        version: link:../../packages/validation
       chalk:
         specifier: ^5.6.2
         version: 5.6.2
@@ -146,6 +149,28 @@ importers:
       '@types/node':
         specifier: ^24.10.4
         version: 24.10.4
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/validation:
+    dependencies:
+      '@hexp/catalog':
+        specifier: workspace:*
+        version: link:../catalog
+      '@hexp/shared':
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      '@rslib/core':
+        specifier: ^0.18.5
+        version: 0.18.5(typescript@5.9.3)
+      '@types/node':
+        specifier: ^24.10.4
+        version: 24.10.4
+      tsx:
+        specifier: ^4.21.0
+        version: 4.21.0
       typescript:
         specifier: ^5.9.3
         version: 5.9.3

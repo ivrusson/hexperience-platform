@@ -10,14 +10,6 @@ export function MonorepoManager() {
   const [mode, setMode] = useState<'list' | 'edit' | 'add'>('list')
   const [view, setView] = useState<'all' | 'apps' | 'packages'>('all')
 
-  useEffect(() => {
-    updatePackages()
-    const unsubscribe = monorepoStore.subscribe(() => {
-      updatePackages()
-    })
-    return unsubscribe
-  }, [updatePackages])
-
   const updatePackages = () => {
     if (view === 'apps') {
       setPackages(monorepoStore.getApps())
@@ -27,6 +19,14 @@ export function MonorepoManager() {
       setPackages(monorepoStore.getPackages())
     }
   }
+
+  useEffect(() => {
+    updatePackages()
+    const unsubscribe = monorepoStore.subscribe(() => {
+      updatePackages()
+    })
+    return unsubscribe
+  }, [view])
 
   const packageIds = packages.map((p) => p.id)
   const { focused, focusNext, focusPrevious } = useFocus({

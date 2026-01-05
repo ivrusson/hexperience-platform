@@ -13,10 +13,8 @@ import { logger } from '../utils/logger.js'
 import { generateMonorepoFiles } from '../utils/monorepoGenerator.js'
 import { generateQualityStandards } from '../utils/qualityStandardsGenerator.js'
 import { findTemplatePath } from '../utils/templatePath.js'
-import {
-  validateCompatibility,
-  validateProjectName,
-} from '../utils/validators.js'
+import { validateGenerationPlan } from '../utils/validation.js'
+import { validateProjectName } from '../utils/validators.js'
 
 interface CreateOptions {
   base?: string
@@ -210,16 +208,6 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       mergedOptions.variables.projectType = projectType
     }
 
-    // Validate compatibility
-    const compatibility = validateCompatibility(selectedBase, selectedAddons)
-    if (!compatibility.valid) {
-      logger.error('Compatibility validation failed:')
-      for (const error of compatibility.errors) {
-        logger.error(`  - ${error}`)
-      }
-      process.exit(1)
-    }
-
     // Prepare output directory
     outputDir = resolve(outputDir, projectName)
     if (existsSync(outputDir) && !isDryRun) {
@@ -265,6 +253,35 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       }
     }
 
+    // Validate generation plan (compatibility, conflicts, dependencies, collisions)
+    const validationResult = validateGenerationPlan(
+      selectedBase,
+      selectedAddons,
+      selectedBase.ops || [],
+      addonTemplatePaths.map(({ template, path }) => ({
+        addon: template,
+        ops: template.ops || [],
+      }))
+    )
+
+    if (!validationResult.isValid) {
+      logger.error('Validation failed:')
+      for (const error of validationResult.errors) {
+        logger.error(error)
+      }
+      process.exit(1)
+    }
+
+    // Use resolved addon order from dependency resolution
+    const orderedAddons = validationResult.dependencies.orderedAddons
+    const orderedAddonPaths = orderedAddons.map((addon) => {
+      const found = addonTemplatePaths.find((a) => a.template.id === addon.id)
+      if (!found) {
+        throw new Error(`Addon path not found for ${addon.id}`)
+      }
+      return found
+    })
+
     // Merge variables from config file if in non-interactive mode
     const contextVariables: Record<string, unknown> = {
       projectName,
@@ -292,7 +309,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
         ops: selectedBase.ops,
       }
 
-      const addonsWithOps = addonTemplatePaths.map(({ template, path }) => ({
+      const addonsWithOps = orderedAddonPaths.map(({ template, path }) => ({
         templateDir: path,
         ops: template.ops,
       }))
