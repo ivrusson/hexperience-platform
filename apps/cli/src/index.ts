@@ -4,6 +4,8 @@ import { Command } from 'commander'
 import { createCommand } from './commands/create.js'
 import { listCommand } from './commands/list.js'
 import { tuiCommand } from './commands/tui.jsx'
+import { validateCommand } from './commands/validate.js'
+import { getLogger } from './utils/logger.js'
 
 const program = new Command()
 
@@ -11,6 +13,13 @@ program
   .name('create-hexp')
   .description('Generate projects from templates')
   .version('0.0.0')
+  .option('-v, --verbose', 'Enable verbose logging (debug mode)')
+  .hook('preAction', (thisCommand) => {
+    const opts = thisCommand.opts()
+    if (opts.verbose) {
+      getLogger(true).setVerbose(true)
+    }
+  })
 
 program
   .command('list')
@@ -32,7 +41,17 @@ program
   .option('--config <file>', 'Configuration file (JSON or YAML)')
   .option('--dry-run', 'Preview generation plan without executing')
   .option('--preview', 'Alias for --dry-run')
+  .option('--stats', 'Show generation statistics')
+  .option('--json', 'Output in JSON format')
+  .option('--save-progress', 'Save partial progress on cancellation')
   .action(createCommand)
+
+program
+  .command('validate')
+  .description('Validate all templates')
+  .option('--json', 'Output validation results in JSON format')
+  .option('--templates <path>', 'Path to templates directory (optional)')
+  .action(validateCommand)
 
 program
   .command('tui')

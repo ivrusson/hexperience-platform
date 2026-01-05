@@ -4,7 +4,7 @@ import { confirm as confirmPrompt, intro, outro, spinner } from '@clack/prompts'
 import type { AddonTemplate, BaseTemplate } from '@hexp/catalog'
 import { Catalog } from '@hexp/catalog'
 import { createEngine, createWorkspace } from '@hexp/engine'
-import type { PostStep } from '@hexp/shared'
+import type { PostStep, PostStepResult } from '@hexp/shared'
 import chalk from 'chalk'
 import { collectVars } from '../prompts/collectVars.js'
 import { selectAddons } from '../prompts/selectAddons.js'
@@ -14,7 +14,9 @@ import {
   loadConfig,
   mergeConfig,
 } from '../utils/configLoader.js'
-import { logger } from '../utils/logger.js'
+import { getErrorHandler } from '../utils/errorHandler.js'
+import { getLogger } from '../utils/logger.js'
+import { StatsCollector } from '../utils/stats.js'
 import { generateMonorepoFiles } from '../utils/monorepoGenerator.js'
 import { generateQualityStandards } from '../utils/qualityStandardsGenerator.js'
 import { findTemplatePath } from '../utils/templatePath.js'
@@ -23,9 +25,82 @@ import { validateProjectName } from '../utils/validators.js'
 
 export async function createCommand(options: CreateOptions): Promise<void> {
   const isDryRun = options.dryRun || options.preview
+  const logger = getLogger()
+  const errorHandler = getErrorHandler()
+  let workspace: ReturnType<typeof createWorkspace> | null = null
+  let statsCollector: StatsCollector | null = null
+  let cancelled = false
+
+  // Setup cancellation handlers
+  const cleanup = async (saveProgress = false): Promise<void> => {
+    if (workspace && !saveProgress) {
+      try {
+        await workspace.cleanup()
+        logger.info('Workspace cleaned up')
+      } catch (error) {
+        logger.warn(
+          `Failed to cleanup workspace: ${error instanceof Error ? error.message : String(error)}`
+        )
+      }
+    } else if (workspace && saveProgress) {
+      logger.info(`Workspace saved at: ${workspace.root}`)
+    }
+  }
+
+  const handleCancel = async (signal: string): Promise<void> => {
+    if (cancelled) {
+      // Force exit on second interrupt
+      logger.warn('\nForce exiting...')
+      await cleanup(false)
+      process.exit(130)
+      return
+    }
+
+    cancelled = true
+    logger.warn(`\n${signal} received. Cancelling generation...`)
+
+    if (options.saveProgress) {
+      await cleanup(true)
+      logger.info('Progress saved. Exiting...')
+      process.exit(130)
+      return
+    }
+
+    const shouldSave = await confirmPrompt({
+      message: 'Save partial progress? (y/n)',
+      initialValue: false,
+    })
+
+    await cleanup(shouldSave)
+    if (shouldSave) {
+      logger.info('Progress saved. Exiting...')
+    } else {
+      logger.info('Generation cancelled. Exiting...')
+    }
+    process.exit(130)
+  }
+
+  process.on('SIGINT', () => {
+    handleCancel('SIGINT').catch((error) => {
+      logger.error(`Error handling cancellation: ${error instanceof Error ? error.message : String(error)}`)
+      process.exit(130)
+    })
+  })
+
+  process.on('SIGTERM', () => {
+    handleCancel('SIGTERM').catch((error) => {
+      logger.error(`Error handling cancellation: ${error instanceof Error ? error.message : String(error)}`)
+      process.exit(143)
+    })
+  })
 
   try {
     intro(chalk.bold.cyan('Create Hexperience Project'))
+
+    // Initialize stats collector
+    if (options.stats || options.json) {
+      statsCollector = new StatsCollector(logger)
+    }
 
     // Load config file if provided
     let configFile
@@ -34,10 +109,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
         configFile = loadConfig(options.config)
         logger.info(`Loaded configuration from ${options.config}`)
       } catch (error) {
-        logger.error(
-          `Failed to load config file: ${error instanceof Error ? error.message : String(error)}`
-        )
-        process.exit(1)
+        errorHandler.handleError(error, { configPath: options.config })
       }
     }
 
@@ -56,8 +128,10 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     s.stop('Templates loaded')
 
     if (bases.length === 0) {
-      logger.error('No base templates found')
-      process.exit(1)
+      errorHandler.handleError(
+        new Error('No base templates found'),
+        { projectRoot }
+      )
     }
 
     // Determine if we're in interactive or non-interactive mode
@@ -77,8 +151,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       // Interactive mode
       selectedBase = await selectBase(bases)
       if (!selectedBase) {
-        logger.error('No base template selected')
-        process.exit(1)
+        errorHandler.handleError(new Error('No base template selected'))
       }
 
       selectedAddons = await selectAddons(addons, selectedBase.capabilities)
@@ -94,8 +167,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
         })
       )
       if (typeof nameResult !== 'string') {
-        logger.error('Project name is required')
-        process.exit(1)
+        errorHandler.handleError(new Error('Project name is required'))
       }
       projectName = nameResult
 
@@ -152,15 +224,18 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     } else {
       // Non-interactive mode
       if (!mergedOptions.base) {
-        logger.error('--base is required in non-interactive mode')
-        process.exit(1)
+        errorHandler.handleError(
+          new Error('--base is required in non-interactive mode')
+        )
       }
 
       selectedBase =
         bases.find((b: BaseTemplate) => b.id === mergedOptions.base!) || null
       if (!selectedBase) {
-        logger.error(`Base template "${mergedOptions.base}" not found`)
-        process.exit(1)
+        errorHandler.handleError(
+          new Error(`Base template "${mergedOptions.base}" not found`),
+          { baseId: mergedOptions.base }
+        )
       }
 
       if (mergedOptions.addons && mergedOptions.addons.length > 0) {
@@ -176,14 +251,17 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       }
 
       if (!projectName) {
-        logger.error('--name is required in non-interactive mode')
-        process.exit(1)
+        errorHandler.handleError(
+          new Error('--name is required in non-interactive mode')
+        )
       }
 
       const nameValidation = validateProjectName(projectName)
       if (!nameValidation.valid) {
-        logger.error(nameValidation.error || 'Invalid project name')
-        process.exit(1)
+        errorHandler.handleError(
+          new Error(nameValidation.error || 'Invalid project name'),
+          { projectName }
+        )
       }
 
       if (!projectType && selectedBase.projectType) {
@@ -203,8 +281,10 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     // Prepare output directory
     outputDir = resolve(outputDir, projectName)
     if (existsSync(outputDir) && !isDryRun) {
-      logger.error(`Directory ${outputDir} already exists`)
-      process.exit(1)
+      errorHandler.handleError(
+        new Error(`Directory ${outputDir} already exists`),
+        { outputDir }
+      )
     }
 
     if (isDryRun) {
@@ -218,7 +298,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     }
 
     // Create workspace
-    const workspace = createWorkspace(outputDir)
+    workspace = createWorkspace(outputDir)
     if (!workspace.exists()) {
       mkdirSync(outputDir, { recursive: true })
     }
@@ -230,8 +310,10 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       'base'
     )
     if (!baseTemplatePath) {
-      logger.error(`Template directory not found for base: ${selectedBase.id}`)
-      process.exit(1)
+      errorHandler.handleError(
+        new Error(`Template directory not found for base: ${selectedBase.id}`),
+        { templateId: selectedBase.id, type: 'base' }
+      )
     }
 
     const addonTemplatePaths: Array<{ template: AddonTemplate; path: string }> =
@@ -257,11 +339,11 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     )
 
     if (!validationResult.isValid) {
-      logger.error('Validation failed:')
-      for (const error of validationResult.errors) {
-        logger.error(error)
-      }
-      process.exit(1)
+      const errorMessage = validationResult.errors.join('\n')
+      errorHandler.handleError(
+        new Error(`Validation failed:\n${errorMessage}`),
+        { validationResult }
+      )
     }
 
     // Use resolved addon order from dependency resolution
@@ -378,13 +460,37 @@ export async function createCommand(options: CreateOptions): Promise<void> {
         })
       }
 
-      const _results = await engine.compose(
+      const results = await engine.compose(
         baseWithOps,
         addonsWithOps,
         postSteps
       )
 
+      // Collect operation statistics
+      if (statsCollector) {
+        const operationTypes: string[] = []
+        // Collect operation types from base and addons
+        if (selectedBase.ops) {
+          operationTypes.push(...selectedBase.ops.map((op) => op.type))
+        }
+        for (const addon of orderedAddons) {
+          if (addon.ops) {
+            operationTypes.push(...addon.ops.map((op) => op.type))
+          }
+        }
+        statsCollector.recordOperations(results, operationTypes)
+      }
+
       genSpinner.stop('Project generated successfully')
+
+      // Execute post-steps and collect stats
+      if (postSteps.length > 0 && statsCollector) {
+        // Note: post-steps are executed inside engine.compose, but we need to track them
+        // For now, we'll track them separately if needed
+        const postStepTypes = postSteps.map((s) => s.type)
+        // We would need to get post-step results from engine, but for now we'll estimate
+        // This could be improved by returning post-step results from engine.compose
+      }
 
       // Generate monorepo files if project type is monorepo
       if (projectType === 'monorepo') {
@@ -413,31 +519,38 @@ export async function createCommand(options: CreateOptions): Promise<void> {
           `Failed to generate quality standards: ${error instanceof Error ? error.message : String(error)}`
         )
       }
-      // Show next steps
-      outro(chalk.green('Done!'))
-      logger.info(chalk.cyan('\nNext steps:'))
-      logger.info(chalk.gray(`  cd ${projectName}`))
-      if (postSteps.some((s) => s.type === 'installDependencies')) {
-        logger.info(chalk.gray('  Dependencies have been installed'))
+      // Display statistics if requested
+      if (statsCollector) {
+        statsCollector.displaySummary(options.json ? 'json' : 'text')
       } else {
+        // Show next steps
+        outro(chalk.green('Done!'))
+        logger.info(chalk.cyan('\nNext steps:'))
+        logger.info(chalk.gray(`  cd ${projectName}`))
+        if (postSteps.some((s) => s.type === 'installDependencies')) {
+          logger.info(chalk.gray('  Dependencies have been installed'))
+        } else {
+          logger.info(
+            chalk.gray(`  ${projectType === 'monorepo' ? 'pnpm' : 'npm'} install`)
+          )
+        }
         logger.info(
-          chalk.gray(`  ${projectType === 'monorepo' ? 'pnpm' : 'npm'} install`)
+          chalk.gray(`  ${projectType === 'monorepo' ? 'pnpm' : 'npm'} run dev`)
         )
       }
-      logger.info(
-        chalk.gray(`  ${projectType === 'monorepo' ? 'pnpm' : 'npm'} run dev`)
-      )
     } catch (error) {
       genSpinner.stop('Generation failed')
-      logger.error(
-        `Failed to generate project: ${error instanceof Error ? error.message : String(error)}`
-      )
-      process.exit(1)
+      if (cancelled) {
+        // Don't show error if cancelled
+        return
+      }
+      errorHandler.handleError(error, { command: 'create', options })
     }
   } catch (error) {
-    logger.error(
-      `Unexpected error: ${error instanceof Error ? error.message : String(error)}`
-    )
-    process.exit(1)
+    if (cancelled) {
+      // Don't show error if cancelled
+      return
+    }
+    errorHandler.handleError(error, { command: 'create', options })
   }
 }

@@ -12,11 +12,18 @@ This is a monorepo built with:
 - **LeftHook** - Git hooks manager
 - **commit-lint** - Commit message linter
 
-## Architecture
+## Documentation
 
-See the architecture documentation:
+### User Documentation
+- [User Guide](./doc/USER-GUIDE.md) - Complete guide to using the CLI
+- [Template Guide](./doc/TEMPLATE-GUIDE.md) - Creating base templates
+- [Addon Guide](./doc/ADDON-GUIDE.md) - Creating addon templates
+- [Examples](./doc/EXAMPLES.md) - Practical usage examples
+
+### Technical Documentation
 - [Concept](./doc/CONCEPT.md) - Overall system design and principles
 - [Architecture Flow](./doc/ARCHITECTURE-FLOW.md) - Technical flow and components
+- [Development Plan](./doc/DEVELOPMENT-PLAN.md) - Development roadmap and milestones
 
 ## Project Structure
 
@@ -126,6 +133,35 @@ Composer engine - applies templates and addons to generate projects.
 ### `@hexp/cli`
 CLI application - user interface for the platform.
 
+## Quick Start
+
+Generate a new project:
+
+```bash
+# Interactive mode
+create-hexp create
+
+# Non-interactive mode
+create-hexp create \
+  --base base-hono-drizzle \
+  --addons addon-auth \
+  --name my-project
+```
+
+List available templates:
+
+```bash
+create-hexp list
+```
+
+Validate templates:
+
+```bash
+create-hexp validate
+```
+
+See [User Guide](./doc/USER-GUIDE.md) for complete documentation.
+
 ## Templates
 
 Templates are organized in:
@@ -133,6 +169,8 @@ Templates are organized in:
 - `templates/addons/` - Feature addon templates
 
 Each template requires a `manifest.json` describing its capabilities, requirements, and operations.
+
+See [Template Guide](./doc/TEMPLATE-GUIDE.md) and [Addon Guide](./doc/ADDON-GUIDE.md) for creating templates.
 
 ## CI/CD
 

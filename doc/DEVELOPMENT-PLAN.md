@@ -375,43 +375,43 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 
 #### US-7.1: Como desarrollador, quiero logs detallados del proceso
 **Tareas:**
-- [ ] Implementar sistema de logging estructurado
-- [ ] Niveles de log: debug, info, warn, error
-- [ ] Flag `--verbose` para logs detallados
-- [ ] Colores en terminal (usar `chalk` o similar)
-- [ ] Progress indicators para operaciones largas
+- [x] Implementar sistema de logging estructurado
+- [x] Niveles de log: debug, info, warn, error
+- [x] Flag `--verbose` para logs detallados
+- [x] Colores en terminal (usar `chalk` o similar)
+- [x] Progress indicators para operaciones largas
 
 #### US-7.2: Como usuario, quiero ver estadísticas de generación
 **Tareas:**
-- [ ] Mostrar resumen al finalizar:
+- [x] Mostrar resumen al finalizar:
   - Archivos creados/modificados
   - Tiempo de ejecución
   - Operaciones ejecutadas
-- [ ] Flag `--stats` para mostrar solo estadísticas
-- [ ] Formato JSON opcional para CI/CD
+- [x] Flag `--stats` para mostrar solo estadísticas
+- [x] Formato JSON opcional para CI/CD
 
 #### US-7.3: Como desarrollador, quiero manejar errores de forma robusta
 **Tareas:**
-- [ ] Implementar error handling centralizado
-- [ ] Tipos de error específicos (ValidationError, OperationError, etc.)
-- [ ] Mensajes de error claros y accionables
-- [ ] Stack traces solo en modo debug
-- [ ] Códigos de salida apropiados (0, 1, etc.)
+- [x] Implementar error handling centralizado
+- [x] Tipos de error específicos (ValidationError, OperationError, etc.)
+- [x] Mensajes de error claros y accionables
+- [x] Stack traces solo en modo debug
+- [x] Códigos de salida apropiados (0, 1, etc.)
 
 #### US-7.4: Como desarrollador, quiero validar templates en CI
 **Tareas:**
-- [ ] Comando `validate` que valida todos los templates
-- [ ] Validar estructura de manifests
-- [ ] Validar que archivos referenciados existen
-- [ ] Validar sintaxis de operaciones
-- [ ] Integrar en GitHub Actions
+- [x] Comando `validate` que valida todos los templates
+- [x] Validar estructura de manifests
+- [x] Validar que archivos referenciados existen
+- [x] Validar sintaxis de operaciones
+- [ ] Integrar en GitHub Actions (opcional)
 
 #### US-7.5: Como usuario, quiero poder cancelar la generación
 **Tareas:**
-- [ ] Manejar señales SIGINT/SIGTERM
-- [ ] Limpiar workspace temporal al cancelar
-- [ ] Mensaje de confirmación antes de cancelar
-- [ ] Guardar progreso parcial opcional
+- [x] Manejar señales SIGINT/SIGTERM
+- [x] Limpiar workspace temporal al cancelar
+- [x] Mensaje de confirmación antes de cancelar
+- [x] Guardar progreso parcial opcional
 
 ---
 
@@ -423,18 +423,18 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 
 #### US-8.1: Como desarrollador, quiero documentación completa de la API
 **Tareas:**
-- [ ] Documentar API pública de cada package
-- [ ] Generar docs con TypeDoc
-- [ ] Ejemplos de uso en documentación
-- [ ] Guías de desarrollo para contribuidores
+- [x] Documentar API pública de cada package (JSDoc en código)
+- [ ] Generar docs con TypeDoc (pendiente configuración)
+- [x] Ejemplos de uso en documentación
+- [x] Guías de desarrollo para contribuidores (CONTRIBUTING.md)
 
 #### US-8.2: Como usuario, quiero guías de uso del CLI
 **Tareas:**
-- [ ] README principal actualizado
-- [ ] Guía de uso del CLI
-- [ ] Guía de creación de templates
-- [ ] Guía de creación de addons
-- [ ] Ejemplos y casos de uso
+- [x] README principal actualizado
+- [x] Guía de uso del CLI (USER-GUIDE.md)
+- [x] Guía de creación de templates (TEMPLATE-GUIDE.md)
+- [x] Guía de creación de addons (ADDON-GUIDE.md)
+- [x] Ejemplos y casos de uso (EXAMPLES.md)
 
 #### US-8.3: Como desarrollador, quiero alta cobertura de tests
 **Tareas:**
