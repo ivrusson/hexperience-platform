@@ -13,9 +13,9 @@ describe('validation integration', () => {
 
   test.beforeEach(async () => {
     const tempPrefix = join(tmpdir(), `hexp-validation-test-${Date.now()}`)
-    tempDir = await mkdir(tempPrefix, {
+    tempDir = (await mkdir(tempPrefix, {
       recursive: true,
-    })
+    })) as string
     templatesDir = join(tempDir, 'templates')
     await mkdir(join(templatesDir, 'bases'), { recursive: true })
     await mkdir(join(templatesDir, 'addons'), { recursive: true })
@@ -64,12 +64,9 @@ describe('validation integration', () => {
     ok(base)
     ok(addon)
 
-    const result = validateGenerationPlan(
-      base,
-      [addon],
-      base.ops || [],
-      [{ addon, ops: addon.ops || [] }]
-    )
+    const result = validateGenerationPlan(base, [addon], base.ops || [], [
+      { addon, ops: addon.ops || [] },
+    ])
 
     strictEqual(result.isValid, true)
     strictEqual(result.compatibility.isCompatible, true)
@@ -116,12 +113,9 @@ describe('validation integration', () => {
     ok(base)
     ok(addon)
 
-    const result = validateGenerationPlan(
-      base,
-      [addon],
-      base.ops || [],
-      [{ addon, ops: addon.ops || [] }]
-    )
+    const result = validateGenerationPlan(base, [addon], base.ops || [], [
+      { addon, ops: addon.ops || [] },
+    ])
 
     strictEqual(result.isValid, false)
     strictEqual(result.compatibility.isCompatible, false)
