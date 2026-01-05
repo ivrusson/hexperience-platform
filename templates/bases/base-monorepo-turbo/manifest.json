@@ -1,0 +1,15 @@
+{
+  "id": "base-monorepo-turbo",
+  "type": "base",
+  "name": "Monorepo with Turbo",
+  "description": "A monorepo template with Turbo, pnpm workspaces, Biome, commitlint, and LeftHook",
+  "projectType": "monorepo",
+  "capabilities": ["monorepo", "typescript", "turbo", "pnpm"],
+  "ops": [
+    {
+      "type": "templateRender",
+      "from": "template/**",
+      "to": "."
+    }
+  ]
+}
