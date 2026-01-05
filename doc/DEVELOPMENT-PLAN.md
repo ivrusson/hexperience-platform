@@ -236,52 +236,52 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 
 #### US-5.1: Como desarrollador, quiero realizar transformaciones AST
 **Tareas:**
-- [ ] Implementar operación `codemod`: transformaciones AST de TypeScript
-- [ ] Integrar `ts-morph` o `jscodeshift` para manipulación AST
-- [ ] Soporte para operaciones comunes (agregar imports, modificar clases, etc.)
-- [ ] Validar AST resultante después de transformación
-- [ ] Tests para codemods con casos reales
+- [x] Implementar operación `codemod`: transformaciones AST de TypeScript
+- [x] Integrar `ts-morph` o `jscodeshift` para manipulación AST
+- [x] Soporte para operaciones comunes (agregar imports, modificar clases, etc.)
+- [x] Validar AST resultante después de transformación
+- [x] Tests para codemods con casos reales
 
 #### US-5.2: Como desarrollador, quiero agregar variables de entorno
 **Tareas:**
-- [ ] Implementar operación `envAppend`: agregar variables a `.env`
-- [ ] Soporte para `.env`, `.env.example`, `.env.local`
-- [ ] Validar formato de variables de entorno
-- [ ] Evitar duplicados
-- [ ] Tests de envAppend
+- [x] Implementar operación `envAppend`: agregar variables a `.env`
+- [x] Soporte para `.env`, `.env.example`, `.env.local`
+- [x] Validar formato de variables de entorno
+- [x] Evitar duplicados
+- [x] Tests de envAppend
 
 #### US-5.3: Como usuario, quiero que se instalen dependencias automáticamente
 **Tareas:**
-- [ ] Implementar post-step `installDependencies`
-- [ ] Detectar package manager (pnpm, npm, yarn)
-- [ ] Ejecutar `pnpm install` o equivalente
-- [ ] Mostrar progreso de instalación
-- [ ] Manejar errores de instalación
-- [ ] Tests de instalación (mock de package managers)
+- [x] Implementar post-step `installDependencies`
+- [x] Detectar package manager (pnpm, npm, yarn)
+- [x] Ejecutar `pnpm install` o equivalente
+- [x] Mostrar progreso de instalación
+- [x] Manejar errores de instalación
+- [x] Tests de instalación (mock de package managers)
 
 #### US-5.4: Como usuario, quiero que se formatee y valide el código generado
 **Tareas:**
-- [ ] Implementar post-step `formatCode` (usar Biome o Prettier)
-- [ ] Implementar post-step `lintCode` (usar Biome o ESLint)
-- [ ] Implementar post-step `typeCheck` (usar TypeScript)
-- [ ] Ejecutar solo si está configurado en el proyecto
-- [ ] Tests de post-steps
+- [x] Implementar post-step `formatCode` (usar Biome o Prettier)
+- [x] Implementar post-step `lintCode` (usar Biome o ESLint)
+- [x] Implementar post-step `typeCheck` (usar TypeScript)
+- [x] Ejecutar solo si está configurado en el proyecto
+- [x] Tests de post-steps
 
 #### US-5.5: Como usuario, quiero inicializar git en el proyecto generado
 **Tareas:**
-- [ ] Implementar post-step `gitInit`
-- [ ] Ejecutar `git init` si flag está activo
-- [ ] Crear commit inicial opcional
-- [ ] Configurar `.gitignore` si no existe
-- [ ] Tests de gitInit
+- [x] Implementar post-step `gitInit`
+- [x] Ejecutar `git init` si flag está activo
+- [x] Crear commit inicial opcional
+- [x] Configurar `.gitignore` si no existe
+- [x] Tests de gitInit
 
 #### US-5.6: Como usuario, quiero que se genere documentación básica
 **Tareas:**
-- [ ] Implementar post-step `generateDocs`
-- [ ] Generar README.md básico con información del proyecto
-- [ ] Incluir instrucciones de setup y uso
-- [ ] Mostrar "Next steps" después de generación
-- [ ] Tests de generación de docs
+- [x] Implementar post-step `generateDocs`
+- [x] Generar README.md básico con información del proyecto
+- [x] Incluir instrucciones de setup y uso
+- [x] Mostrar "Next steps" después de generación
+- [x] Tests de generación de docs
 
 ---
 
@@ -293,77 +293,77 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 
 #### US-6.1: Como desarrollador, quiero un template base para monorepo
 **Tareas:**
-- [ ] Crear `templates/bases/base-monorepo-turbo/`
-- [ ] Manifest con `projectType: "monorepo"`
-- [ ] Estructura base con:
+- [x] Crear `templates/bases/base-monorepo-turbo/`
+- [x] Manifest con `projectType: "monorepo"`
+- [x] Estructura base con:
   - `turbo.json` configurado
   - `pnpm-workspace.yaml`
   - Configuración LeftHook, commit-lint, Biome
   - `tsconfig.json` base con project references
   - Estructura apps/ y packages/ vacía
-- [ ] Ejemplos de apps/ y packages/ opcionales
-- [ ] Documentación del template
-- [ ] Probar generación end-to-end
+- [x] Ejemplos de apps/ y packages/ opcionales
+- [x] Documentación del template
+- [x] Probar generación end-to-end
 
 #### US-6.2: Como desarrollador, quiero un template base mínimo funcional (single package)
 **Tareas:**
-- [ ] Crear `templates/bases/base-minimal-node/`
-- [ ] Definir `manifest.json` con metadata básica
-- [ ] Crear estructura `template/` con:
+- [x] Crear `templates/bases/base-minimal-node/`
+- [x] Definir `manifest.json` con metadata básica
+- [x] Crear estructura `template/` con:
   - `package.json` básico
   - `tsconfig.json`
   - `src/index.ts` con hello world
   - `.gitignore`
-- [ ] Probar generación end-to-end
-- [ ] Documentar template
+- [x] Probar generación end-to-end
+- [x] Documentar template
 
 #### US-6.3: Como desarrollador, quiero un template base con Hono + Drizzle
 **Tareas:**
-- [ ] Crear `templates/bases/base-hono-drizzle/`
-- [ ] Definir manifest con capabilities: `["web-server", "orm", "typescript"]`
-- [ ] Crear estructura con:
+- [x] Crear `templates/bases/base-hono-drizzle/`
+- [x] Definir manifest con capabilities: `["web-server", "orm", "typescript"]`
+- [x] Crear estructura con:
   - Servidor Hono básico
   - Configuración Drizzle
   - Ejemplo de ruta y modelo
-- [ ] Probar generación y que el proyecto funcione
-- [ ] Documentar template
+- [x] Probar generación y que el proyecto funcione
+- [x] Documentar template
 
 #### US-6.4: Como desarrollador, quiero addons compatibles con monorepo
 **Tareas:**
-- [ ] Asegurar que addons funcionen en contexto monorepo
-- [ ] Addon para agregar nueva app al monorepo:
+- [x] Asegurar que addons funcionen en contexto monorepo
+- [x] Addon para agregar nueva app al monorepo:
   - Detectar estructura monorepo
   - Crear nueva app en apps/
   - Actualizar workspace si es necesario
-- [ ] Addon para agregar nuevo package al monorepo:
+- [x] Addon para agregar nuevo package al monorepo:
   - Crear package en packages/
   - Configurar dependencias
   - Actualizar project references
-- [ ] Tests de addons en contexto monorepo
-- [ ] Documentación de compatibilidad monorepo
+- [x] Tests de addons en contexto monorepo
+- [x] Documentación de compatibilidad monorepo
 
 #### US-6.5: Como desarrollador, quiero un addon de autenticación
 **Tareas:**
-- [ ] Crear `templates/addons/addon-auth/`
-- [ ] Definir manifest con:
+- [x] Crear `templates/addons/addon-auth/`
+- [x] Definir manifest con:
   - `requires: ["web-server"]`
   - `provides: ["auth"]`
   - Ops para agregar código de auth
-- [ ] Implementar ops:
+- [x] Implementar ops:
   - `copy`: archivos de auth
   - `textInsert`: agregar middleware en servidor
   - `jsonMerge`: agregar dependencias
-- [ ] Probar con base-hono-drizzle
-- [ ] Documentar addon
+- [x] Probar con base-hono-drizzle
+- [x] Documentar addon
 
 #### US-6.6: Como desarrollador, quiero un addon de Docker
 **Tareas:**
-- [ ] Crear `templates/addons/addon-docker/`
-- [ ] Definir manifest (sin requires, compatible con cualquier base)
-- [ ] Crear `Dockerfile` y `docker-compose.yml`
-- [ ] Implementar ops para copiar archivos Docker
-- [ ] Probar con diferentes bases
-- [ ] Documentar addon
+- [x] Crear `templates/addons/addon-docker/`
+- [x] Definir manifest (sin requires, compatible con cualquier base)
+- [x] Crear `Dockerfile` y `docker-compose.yml`
+- [x] Implementar ops para copiar archivos Docker
+- [x] Probar con diferentes bases
+- [x] Documentar addon
 
 ---
 
