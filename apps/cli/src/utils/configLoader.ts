@@ -137,10 +137,23 @@ export function mergeConfig(
     dryRun: cliOptions.dryRun,
     preview: cliOptions.preview,
     variables: config.variables,
+    // Post-step options from CLI take precedence
+    skipInstall: cliOptions.skipInstall,
+    skipFormat: cliOptions.skipFormat,
+    skipLint: cliOptions.skipLint,
+    skipTypeCheck: cliOptions.skipTypeCheck,
+    skipGitInit: cliOptions.skipGitInit,
+    skipDocs: cliOptions.skipDocs,
+    installDeps: cliOptions.installDeps,
+    formatCode: cliOptions.formatCode,
+    lintCode: cliOptions.lintCode,
+    typeCheck: cliOptions.typeCheck,
+    gitInit: cliOptions.gitInit,
+    generateDocs: cliOptions.generateDocs,
   }
 }
 
-interface CreateOptions {
+export interface CreateOptions {
   base?: string
   addons?: string[]
   name?: string
@@ -151,4 +164,16 @@ interface CreateOptions {
   dryRun?: boolean
   preview?: boolean
   variables?: Record<string, unknown>
+  skipInstall?: boolean
+  skipFormat?: boolean
+  skipLint?: boolean
+  skipTypeCheck?: boolean
+  skipGitInit?: boolean
+  skipDocs?: boolean
+  installDeps?: boolean
+  formatCode?: boolean
+  lintCode?: boolean
+  typeCheck?: boolean
+  gitInit?: boolean
+  generateDocs?: boolean
 }

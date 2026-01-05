@@ -25,7 +25,8 @@
     "@hexp/catalog": "workspace:*",
     "@hexp/shared": "workspace:*",
     "deepmerge": "^4.3.1",
-    "mustache": "^4.2.0"
+    "mustache": "^4.2.0",
+    "ts-morph": "^27.0.2"
   },
   "devDependencies": {
     "@rslib/core": "^0.18.5",
