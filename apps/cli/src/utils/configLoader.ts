@@ -176,4 +176,7 @@ export interface CreateOptions {
   typeCheck?: boolean
   gitInit?: boolean
   generateDocs?: boolean
+  stats?: boolean
+  json?: boolean
+  saveProgress?: boolean
 }
