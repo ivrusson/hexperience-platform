@@ -1,0 +1,27 @@
+{
+  "name": "{{projectName}}",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A web server with Hono and Drizzle ORM",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.14.0",
+    "drizzle-orm": "^0.33.0",
+    "hono": "^4.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "drizzle-kit": "^0.27.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  }
+}

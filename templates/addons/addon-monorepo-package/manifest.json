@@ -1,0 +1,34 @@
+{
+  "id": "addon-monorepo-package",
+  "type": "addon",
+  "name": "Monorepo Package",
+  "description": "Add a new package to a monorepo",
+  "requires": ["monorepo"],
+  "prompts": [
+    {
+      "id": "packageName",
+      "label": "Package name",
+      "type": "text",
+      "required": true
+    }
+  ],
+  "ops": [
+    {
+      "type": "templateRender",
+      "from": "template/packages/{{packageName}}/**",
+      "to": "packages/{{packageName}}"
+    },
+    {
+      "type": "jsonMerge",
+      "target": "tsconfig.json",
+      "data": {
+        "references": [
+          {
+            "path": "./packages/{{packageName}}"
+          }
+        ]
+      },
+      "arrayMerge": "append"
+    }
+  ]
+}

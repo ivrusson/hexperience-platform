@@ -1,0 +1,15 @@
+{
+  "id": "base-minimal-node",
+  "type": "base",
+  "name": "Minimal Node.js",
+  "description": "A minimal Node.js project template with TypeScript support",
+  "projectType": "single",
+  "capabilities": ["typescript", "node"],
+  "ops": [
+    {
+      "type": "templateRender",
+      "from": "template/**",
+      "to": "."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  {{projectName}}:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "{{port}}:{{port}}"
+    environment:
+      - NODE_ENV=production
+      - PORT={{port}}
+    volumes:
+      - ./dist:/app/dist
+    restart: unless-stopped

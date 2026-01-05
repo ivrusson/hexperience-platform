@@ -1,0 +1,34 @@
+{
+  "id": "addon-monorepo-app",
+  "type": "addon",
+  "name": "Monorepo App",
+  "description": "Add a new app to a monorepo",
+  "requires": ["monorepo"],
+  "prompts": [
+    {
+      "id": "appName",
+      "label": "App name",
+      "type": "text",
+      "required": true
+    }
+  ],
+  "ops": [
+    {
+      "type": "templateRender",
+      "from": "template/apps/{{appName}}/**",
+      "to": "apps/{{appName}}"
+    },
+    {
+      "type": "jsonMerge",
+      "target": "tsconfig.json",
+      "data": {
+        "references": [
+          {
+            "path": "./apps/{{appName}}"
+          }
+        ]
+      },
+      "arrayMerge": "append"
+    }
+  ]
+}

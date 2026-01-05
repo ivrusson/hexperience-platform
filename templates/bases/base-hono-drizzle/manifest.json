@@ -1,0 +1,31 @@
+{
+  "id": "base-hono-drizzle",
+  "type": "base",
+  "name": "Hono + Drizzle",
+  "description": "A web server template with Hono framework and Drizzle ORM",
+  "projectType": "single",
+  "capabilities": ["web-server", "orm", "typescript"],
+  "prompts": [
+    {
+      "id": "dbUrl",
+      "label": "Database URL",
+      "type": "text",
+      "required": true,
+      "default": "file:./db.sqlite"
+    },
+    {
+      "id": "port",
+      "label": "Server port",
+      "type": "text",
+      "required": false,
+      "default": "3000"
+    }
+  ],
+  "ops": [
+    {
+      "type": "templateRender",
+      "from": "template/**",
+      "to": "."
+    }
+  ]
+}

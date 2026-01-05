@@ -1,0 +1,57 @@
+{
+  "id": "addon-auth",
+  "type": "addon",
+  "name": "Authentication",
+  "description": "Add JWT-based authentication with login and register routes",
+  "requires": ["web-server"],
+  "provides": ["auth"],
+  "ops": [
+    {
+      "type": "copy",
+      "from": "template/src/auth/**",
+      "to": "src/auth"
+    },
+    {
+      "type": "textInsert",
+      "target": "src/index.ts",
+      "marker": "// @addon:imports",
+      "content": "import { authMiddleware } from './auth/middleware.js'\nimport { authRoutes } from './auth/routes.js'\n",
+      "position": "after"
+    },
+    {
+      "type": "textInsert",
+      "target": "src/index.ts",
+      "marker": "// @addon:auth",
+      "content": "// Authentication middleware\napp.use('*', authMiddleware)\n",
+      "position": "after"
+    },
+    {
+      "type": "textInsert",
+      "target": "src/index.ts",
+      "marker": "// @addon:routes",
+      "content": "// Authentication routes\napp.route('/auth', authRoutes)\n",
+      "position": "after"
+    },
+    {
+      "type": "jsonMerge",
+      "target": "package.json",
+      "data": {
+        "dependencies": {
+          "@hono/jwt": "^1.0.0",
+          "bcrypt": "^5.1.1",
+          "zod": "^3.22.4"
+        },
+        "devDependencies": {
+          "@types/bcrypt": "^5.0.2"
+        }
+      }
+    },
+    {
+      "type": "envAppend",
+      "target": ".env.example",
+      "variables": {
+        "JWT_SECRET": "your-secret-key-change-in-production"
+      }
+    }
+  ]
+}

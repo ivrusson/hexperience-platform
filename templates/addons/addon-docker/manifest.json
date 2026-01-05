@@ -1,0 +1,13 @@
+{
+  "id": "addon-docker",
+  "type": "addon",
+  "name": "Docker Support",
+  "description": "Add Docker support with Dockerfile and docker-compose.yml",
+  "ops": [
+    {
+      "type": "templateRender",
+      "from": "template/**",
+      "to": "."
+    }
+  ]
+}
