@@ -19,10 +19,7 @@ export async function executeCopy(
     // Check if the pattern is a glob
     if (isGlobPattern(operation.from)) {
       // Expand glob pattern
-      const sourceFiles = await expandGlob(
-        operation.from,
-        context.templateRoot
-      )
+      const sourceFiles = await expandGlob(operation.from, context.templateRoot)
 
       if (sourceFiles.length === 0) {
         throw new OperationError(

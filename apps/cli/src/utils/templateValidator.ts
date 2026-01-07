@@ -337,10 +337,7 @@ export class TemplateValidator {
   /**
    * Validate a prompt
    */
-  private validatePrompt(
-    prompt: Prompt,
-    index: number
-  ): ValidationIssue[] {
+  private validatePrompt(prompt: Prompt, index: number): ValidationIssue[] {
     const issues: ValidationIssue[] = []
 
     if (!prompt.id || typeof prompt.id !== 'string') {
@@ -424,8 +421,6 @@ export class TemplateValidator {
    * Get template path
    */
   private getTemplatePath(id: string, type: 'base' | 'addon'): string {
-    return type === 'base'
-      ? `templates/bases/${id}`
-      : `templates/addons/${id}`
+    return type === 'base' ? `templates/bases/${id}` : `templates/addons/${id}`
   }
 }

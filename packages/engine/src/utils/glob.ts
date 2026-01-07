@@ -33,10 +33,7 @@ export async function expandGlob(
 /**
  * Get relative path from base directory
  */
-export function getRelativePath(
-  absolutePath: string,
-  baseDir: string
-): string {
+export function getRelativePath(absolutePath: string, baseDir: string): string {
   return relative(resolve(baseDir), absolutePath)
 }
 
@@ -72,4 +69,3 @@ export async function getAllFiles(
   await traverse(resolvedDir)
   return files.sort()
 }
-

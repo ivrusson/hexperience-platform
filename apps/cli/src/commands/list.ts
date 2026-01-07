@@ -1,6 +1,6 @@
-import chalk from 'chalk'
 import type { AddonTemplate, BaseTemplate } from '@hexp/catalog'
 import { Catalog } from '@hexp/catalog'
+import chalk from 'chalk'
 
 interface ListOptions {
   bases?: boolean
@@ -53,7 +53,9 @@ export async function listCommand(options: ListOptions): Promise<void> {
 
     // Show errors if any
     if (errors.length > 0) {
-      console.error(chalk.red(`\n⚠ Found ${errors.length} error(s) loading templates:\n`))
+      console.error(
+        chalk.red(`\n⚠ Found ${errors.length} error(s) loading templates:\n`)
+      )
       for (const { path, error } of errors) {
         console.error(chalk.red(`  ✗ ${path}: ${error}`))
       }
@@ -78,15 +80,11 @@ export async function listCommand(options: ListOptions): Promise<void> {
           }
           if (base.capabilities && base.capabilities.length > 0) {
             console.log(
-              chalk.blue(
-                `    Capabilities: ${base.capabilities.join(', ')}`
-              )
+              chalk.blue(`    Capabilities: ${base.capabilities.join(', ')}`)
             )
           }
           if (base.projectType) {
-            console.log(
-              chalk.magenta(`    Project Type: ${base.projectType}`)
-            )
+            console.log(chalk.magenta(`    Project Type: ${base.projectType}`))
           }
           console.log('')
         }
@@ -97,7 +95,9 @@ export async function listCommand(options: ListOptions): Promise<void> {
       if (addons.length === 0) {
         console.log(chalk.yellow('\nNo addon templates found.\n'))
       } else {
-        console.log(chalk.bold.cyan(`\n🔌 Addon Templates (${addons.length}):\n`))
+        console.log(
+          chalk.bold.cyan(`\n🔌 Addon Templates (${addons.length}):\n`)
+        )
         for (const addon of addons) {
           console.log(chalk.bold(`  ${addon.name}`))
           console.log(chalk.gray(`    ID: ${addon.id}`))

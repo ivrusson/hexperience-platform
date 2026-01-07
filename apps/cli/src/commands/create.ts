@@ -17,9 +17,9 @@ import {
 } from '../utils/configLoader.js'
 import { getErrorHandler } from '../utils/errorHandler.js'
 import { getLogger } from '../utils/logger.js'
-import { StatsCollector } from '../utils/stats.js'
 import { generateMonorepoFiles } from '../utils/monorepoGenerator.js'
 import { generateQualityStandards } from '../utils/qualityStandardsGenerator.js'
+import { StatsCollector } from '../utils/stats.js'
 import { findTemplatePath } from '../utils/templatePath.js'
 import { validateGenerationPlan } from '../utils/validation.js'
 import { validateProjectName } from '../utils/validators.js'
@@ -83,14 +83,18 @@ export async function createCommand(options: CreateOptions): Promise<void> {
 
   process.on('SIGINT', () => {
     handleCancel('SIGINT').catch((error) => {
-      logger.error(`Error handling cancellation: ${error instanceof Error ? error.message : String(error)}`)
+      logger.error(
+        `Error handling cancellation: ${error instanceof Error ? error.message : String(error)}`
+      )
       process.exit(130)
     })
   })
 
   process.on('SIGTERM', () => {
     handleCancel('SIGTERM').catch((error) => {
-      logger.error(`Error handling cancellation: ${error instanceof Error ? error.message : String(error)}`)
+      logger.error(
+        `Error handling cancellation: ${error instanceof Error ? error.message : String(error)}`
+      )
       process.exit(143)
     })
   })
@@ -129,10 +133,9 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     s.stop('Templates loaded')
 
     if (bases.length === 0) {
-      errorHandler.handleError(
-        new Error('No base templates found'),
-        { projectRoot }
-      )
+      errorHandler.handleError(new Error('No base templates found'), {
+        projectRoot,
+      })
     }
 
     // Determine if we're in interactive or non-interactive mode
@@ -499,7 +502,11 @@ export async function createCommand(options: CreateOptions): Promise<void> {
             })
           : mergedOptions.gitInit
 
-        if (typeof shouldInitGit === 'boolean' ? shouldInitGit : mergedOptions.gitInit) {
+        if (
+          typeof shouldInitGit === 'boolean'
+            ? shouldInitGit
+            : mergedOptions.gitInit
+        ) {
           postSteps.push({
             type: 'gitInit',
             enabled: true,
@@ -591,7 +598,9 @@ export async function createCommand(options: CreateOptions): Promise<void> {
           logger.info(chalk.gray('  Dependencies have been installed'))
         } else {
           logger.info(
-            chalk.gray(`  ${projectType === 'monorepo' ? 'pnpm' : 'npm'} install`)
+            chalk.gray(
+              `  ${projectType === 'monorepo' ? 'pnpm' : 'npm'} install`
+            )
           )
         }
         logger.info(
