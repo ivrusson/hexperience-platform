@@ -72,7 +72,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       initialValue: false,
     })
 
-    await cleanup(shouldSave)
+    await cleanup(typeof shouldSave === 'boolean' ? shouldSave : false)
     if (shouldSave) {
       logger.info('Progress saved. Exiting...')
     } else {
@@ -153,6 +153,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       selectedBase = await selectBase(bases)
       if (!selectedBase) {
         errorHandler.handleError(new Error('No base template selected'))
+        return
       }
 
       selectedAddons = await selectAddons(addons, selectedBase.capabilities)
@@ -169,6 +170,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       )
       if (typeof nameResult !== 'string') {
         errorHandler.handleError(new Error('Project name is required'))
+        return
       }
       projectName = nameResult
 
@@ -270,6 +272,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
           new Error(`Base template "${baseTemplateId}" not found`),
           { baseId: baseTemplateId }
         )
+        return
       }
 
       if (mergedOptions.addons && mergedOptions.addons.length > 0) {
@@ -305,6 +308,13 @@ export async function createCommand(options: CreateOptions): Promise<void> {
           new Error(nameValidation.error || 'Invalid project name'),
           { projectName }
         )
+        return
+      }
+
+      // Ensure selectedBase is not null
+      if (!selectedBase) {
+        errorHandler.handleError(new Error('No base template selected'))
+        return
       }
 
       if (!projectType && selectedBase.projectType) {
@@ -340,6 +350,12 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       return
     }
 
+    // Ensure selectedBase is not null
+    if (!selectedBase) {
+      errorHandler.handleError(new Error('No base template selected'))
+      return
+    }
+
     // Create workspace
     workspace = createWorkspace(outputDir)
     if (!workspace.exists()) {
@@ -357,6 +373,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
         new Error(`Template directory not found for base: ${selectedBase.id}`),
         { templateId: selectedBase.id, type: 'base' }
       )
+      return
     }
 
     const addonTemplatePaths: Array<{ template: AddonTemplate; path: string }> =
@@ -482,7 +499,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
             })
           : mergedOptions.gitInit
 
-        if (shouldInitGit) {
+        if (typeof shouldInitGit === 'boolean' ? shouldInitGit : mergedOptions.gitInit) {
           postSteps.push({
             type: 'gitInit',
             enabled: true,

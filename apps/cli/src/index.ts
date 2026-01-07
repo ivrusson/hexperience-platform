@@ -33,6 +33,7 @@ program
   .option('--bases', 'Show only base templates')
   .option('--addons', 'Show only addon templates')
   .option('--all', 'Show all templates (default)')
+  .option('--json', 'Output in JSON format')
   .action(listCommand)
 
 program

@@ -3,6 +3,7 @@
   "type": "addon",
   "name": "Docker Support",
   "description": "Add Docker support with Dockerfile and docker-compose.yml",
+  "provides": ["docker"],
   "ops": [
     {
       "type": "templateRender",

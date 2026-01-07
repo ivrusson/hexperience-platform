@@ -1,56 +1,131 @@
 import { existsSync } from 'node:fs'
 import { copyFile, mkdir, stat } from 'node:fs/promises'
-import { dirname, resolve } from 'node:path'
+import { dirname, join, relative, resolve } from 'node:path'
 import type {
   CopyOperation,
   ExecutionContext,
   OperationResult,
 } from '@hexp/shared'
 import { OperationError } from '../errors.js'
+import { expandGlob, isGlobPattern } from '../utils/glob.js'
 
 export async function executeCopy(
   operation: CopyOperation,
   context: ExecutionContext
 ): Promise<OperationResult> {
   try {
-    const sourcePath = resolve(context.templateRoot, operation.from)
-    const destPath = resolve(context.workspaceRoot, operation.to)
+    const filesAffected: string[] = []
 
-    if (!existsSync(sourcePath)) {
-      throw new OperationError(
-        `Source file does not exist: ${operation.from}`,
-        operation.type,
-        { sourcePath, operation }
+    // Check if the pattern is a glob
+    if (isGlobPattern(operation.from)) {
+      // Expand glob pattern
+      const sourceFiles = await expandGlob(
+        operation.from,
+        context.templateRoot
       )
-    }
 
-    if (existsSync(destPath) && !operation.overwrite) {
-      throw new OperationError(
-        `Destination file already exists: ${operation.to}. Use overwrite: true to replace it.`,
-        operation.type,
-        { destPath, operation }
-      )
-    }
+      if (sourceFiles.length === 0) {
+        throw new OperationError(
+          `No files found matching pattern: ${operation.from}`,
+          operation.type,
+          { operation }
+        )
+      }
 
-    const destDir = dirname(destPath)
-    if (!existsSync(destDir)) {
-      await mkdir(destDir, { recursive: true })
-    }
+      // Process each file
+      for (const sourceFile of sourceFiles) {
+        // Get relative path from template root
+        let relativePath = relative(context.templateRoot, sourceFile)
 
-    const sourceStat = await stat(sourcePath)
-    if (sourceStat.isDirectory()) {
-      throw new OperationError(
-        `Copying directories is not yet supported. Source is a directory: ${operation.from}`,
-        operation.type,
-        { sourcePath, operation }
-      )
-    }
+        // If the source pattern is "template/**", remove "template/" prefix from relative path
+        // This ensures files from template/ go to the root, not to template/ in destination
+        if (operation.from.startsWith('template/')) {
+          const templatePrefix = 'template/'
+          if (relativePath.startsWith(templatePrefix)) {
+            relativePath = relativePath.slice(templatePrefix.length)
+          }
+        }
 
-    await copyFile(sourcePath, destPath)
+        // Determine destination path
+        // If 'to' is a directory (ends with / or .), append the relative path
+        // Otherwise, use 'to' as the destination file
+        let destPath: string
+        if (operation.to === '.' || operation.to.endsWith('/')) {
+          // Destination is a directory, preserve structure (but without template/ prefix)
+          destPath = join(context.workspaceRoot, operation.to, relativePath)
+        } else {
+          // Single file destination (use first file only, or error if multiple)
+          if (sourceFiles.length > 1) {
+            throw new OperationError(
+              `Multiple files match pattern ${operation.from}, but destination is a single file: ${operation.to}`,
+              operation.type,
+              { operation, filesFound: sourceFiles.length }
+            )
+          }
+          destPath = resolve(context.workspaceRoot, operation.to)
+        }
+
+        // Check if destination exists
+        if (existsSync(destPath) && !operation.overwrite) {
+          throw new OperationError(
+            `Destination file already exists: ${relative(context.workspaceRoot, destPath)}. Use overwrite: true to replace it.`,
+            operation.type,
+            { destPath, operation }
+          )
+        }
+
+        // Create destination directory if needed
+        const destDir = dirname(destPath)
+        if (!existsSync(destDir)) {
+          await mkdir(destDir, { recursive: true })
+        }
+
+        // Copy file
+        await copyFile(sourceFile, destPath)
+        filesAffected.push(relative(context.workspaceRoot, destPath))
+      }
+    } else {
+      // Single file (non-glob pattern)
+      const sourcePath = resolve(context.templateRoot, operation.from)
+      const destPath = resolve(context.workspaceRoot, operation.to)
+
+      if (!existsSync(sourcePath)) {
+        throw new OperationError(
+          `Source file does not exist: ${operation.from}`,
+          operation.type,
+          { sourcePath, operation }
+        )
+      }
+
+      if (existsSync(destPath) && !operation.overwrite) {
+        throw new OperationError(
+          `Destination file already exists: ${operation.to}. Use overwrite: true to replace it.`,
+          operation.type,
+          { destPath, operation }
+        )
+      }
+
+      const destDir = dirname(destPath)
+      if (!existsSync(destDir)) {
+        await mkdir(destDir, { recursive: true })
+      }
+
+      const sourceStat = await stat(sourcePath)
+      if (sourceStat.isDirectory()) {
+        throw new OperationError(
+          `Copying directories is not yet supported. Source is a directory: ${operation.from}`,
+          operation.type,
+          { sourcePath, operation }
+        )
+      }
+
+      await copyFile(sourcePath, destPath)
+      filesAffected.push(operation.to)
+    }
 
     return {
       success: true,
-      filesAffected: [operation.to],
+      filesAffected,
     }
   } catch (error) {
     if (error instanceof OperationError) {

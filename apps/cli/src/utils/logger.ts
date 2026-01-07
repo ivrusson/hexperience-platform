@@ -100,8 +100,8 @@ export const logger = {
     getLogger().warn(message, ...args),
   error: (message: string, ...args: unknown[]) =>
     getLogger().error(message, ...args),
-  step: (message: string, ...args: unknown[]) =>
-    getLogger().step(message, ...args),
+  step: (message: string) =>
+    getLogger().step(message),
   debug: (message: string, ...args: unknown[]) =>
     getLogger().debug(message, ...args),
 }

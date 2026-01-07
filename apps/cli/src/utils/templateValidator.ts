@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import type { AddonTemplate, BaseTemplate, Operation } from '@hexp/catalog'
 import { Catalog } from '@hexp/catalog'
+import type { Prompt } from '@hexp/shared'
 import { z } from 'zod'
 import type { TemplateError } from './errors.js'
 import { TemplateError as TemplateErrorClass } from './errors.js'
@@ -337,16 +338,16 @@ export class TemplateValidator {
    * Validate a prompt
    */
   private validatePrompt(
-    prompt: { key: string; type: string; message?: string },
+    prompt: Prompt,
     index: number
   ): ValidationIssue[] {
     const issues: ValidationIssue[] = []
 
-    if (!prompt.key || typeof prompt.key !== 'string') {
+    if (!prompt.id || typeof prompt.id !== 'string') {
       issues.push({
         level: 'error',
-        message: `Prompt missing "key" field at index ${index}`,
-        field: `prompts[${index}].key`,
+        message: `Prompt missing "id" field at index ${index}`,
+        field: `prompts[${index}].id`,
       })
     }
 

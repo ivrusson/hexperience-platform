@@ -26,6 +26,7 @@
     "@hexp/catalog": "workspace:*",
     "@hexp/shared": "workspace:*",
     "deepmerge": "^4.3.1",
+    "fast-glob": "^3.3.3",
     "mustache": "^4.2.0",
     "ts-morph": "^27.0.2"
   },
