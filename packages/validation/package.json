@@ -19,7 +19,8 @@
     "lint": "biome check .",
     "format": "biome format --write .",
     "type-check": "tsc --noEmit",
-    "test": "node --import tsx --test src/__tests__/compatibility.test.ts src/__tests__/conflicts.test.ts src/__tests__/dependencies.test.ts src/__tests__/fileCollisions.test.ts"
+    "test": "node --import tsx --test src/__tests__/compatibility.test.ts src/__tests__/conflicts.test.ts src/__tests__/dependencies.test.ts src/__tests__/fileCollisions.test.ts",
+    "docs": "typedoc"
   },
   "dependencies": {
     "@hexp/catalog": "workspace:*",

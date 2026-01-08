@@ -106,7 +106,7 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 - [x] Mostrar resumen antes de generar
 - [x] Validar inputs del usuario
 - [x] Usar spinners (ora) durante generación
-- [ ] Tests E2E del flujo interactivo
+- [x] Tests E2E del flujo interactivo
 
 #### US-3.3: Como usuario, quiero generar un proyecto de forma no-interactiva
 **Tareas:**
@@ -424,7 +424,7 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 #### US-8.1: Como desarrollador, quiero documentación completa de la API
 **Tareas:**
 - [x] Documentar API pública de cada package (JSDoc en código)
-- [ ] Generar docs con TypeDoc (pendiente configuración)
+- [x] Generar docs con TypeDoc
 - [x] Ejemplos de uso en documentación
 - [x] Guías de desarrollo para contribuidores (CONTRIBUTING.md)
 
@@ -438,11 +438,11 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 
 #### US-8.3: Como desarrollador, quiero alta cobertura de tests
 **Tareas:**
-- [ ] Tests unitarios para todas las funciones core
-- [ ] Tests de integración para flujos completos
-- [ ] Tests E2E para CLI
-- [ ] Tests de templates (snapshot testing)
-- [ ] Configurar coverage reports (target: >80%)
+- [x] Tests unitarios para todas las funciones core
+- [x] Tests de integración para flujos completos
+- [x] Tests E2E para CLI
+- [x] Tests de templates (snapshot testing)
+- [x] Configurar coverage reports (target: >80%)
 
 ---
 
@@ -454,10 +454,10 @@ Plan estructurado en hitos, user stories y tareas técnicas para el desarrollo d
 
 #### US-9.1: Como desarrollador, quiero un registry remoto de templates
 **Tareas:**
-- [ ] Diseñar API de registry
-- [ ] Implementar cliente para descargar templates remotos
-- [ ] Soporte para versionado semántico
-- [ ] Caché local de templates remotos
+- [x] Diseñar API de registry
+- [x] Implementar cliente para descargar templates remotos
+- [x] Soporte para versionado semántico
+- [x] Caché local de templates remotos
 
 #### US-9.2: Como usuario, quiero sugerencias inteligentes de addons
 **Tareas:**

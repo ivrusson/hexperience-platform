@@ -11,6 +11,9 @@
     "format": "turbo format",
     "type-check": "turbo type-check",
     "test": "turbo test",
+    "test:coverage": "c8 pnpm test",
+    "test:coverage:html": "c8 --reporter=html pnpm test",
+    "docs": "turbo docs",
     "clean": "turbo clean",
     "check": "biome check .",
     "format:write": "biome format --write .",
@@ -21,6 +24,8 @@
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^20.2.0",
     "@evilmartians/lefthook": "^2.0.12",
+    "c8": "^8.0.1",
+    "typedoc": "^0.26.11",
     "turbo": "^2.6.3"
   },
   "engines": {

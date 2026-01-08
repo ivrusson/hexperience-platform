@@ -5,6 +5,12 @@ import { createCommand } from './commands/create.js'
 import { listCommand } from './commands/list.js'
 import { tuiCommand } from './commands/tui.jsx'
 import { validateCommand } from './commands/validate.js'
+import {
+  registryInfoCommand,
+  registryListCommand,
+  registrySearchCommand,
+} from './commands/registry.js'
+import { cacheClearCommand, cacheListCommand } from './commands/cache.js'
 import { getLogger } from './utils/logger.js'
 
 const program = new Command()
@@ -59,6 +65,68 @@ program
   .argument('[subcommand]', 'Subcommand: models or monorepo', 'models')
   .action((subcommand: string) => {
     tuiCommand({ subcommand })
+  })
+
+const registryCommand = program
+  .command('registry')
+  .description('Manage remote templates from registry')
+
+registryCommand
+  .command('list')
+  .description('List templates in registry')
+  .option('--type <type>', 'Filter by type (base or addon)')
+  .option('--search <query>', 'Search templates')
+  .option('--limit <number>', 'Maximum number of results', '100')
+  .action((options) => {
+    registryListCommand({
+      type: options.type,
+      search: options.search,
+      limit: options.limit ? parseInt(options.limit, 10) : undefined,
+    })
+  })
+
+registryCommand
+  .command('info')
+  .description('Get information about a template')
+  .argument('<template-id>', 'Template ID')
+  .option('--json', 'Output in JSON format')
+  .action((templateId, options) => {
+    registryInfoCommand(templateId, options)
+  })
+
+registryCommand
+  .command('search')
+  .description('Search templates')
+  .argument('<query>', 'Search query')
+  .option('--type <type>', 'Filter by type (base or addon)')
+  .option('--tags <tags>', 'Comma-separated tags')
+  .option('--limit <number>', 'Maximum number of results', '20')
+  .action((query, options) => {
+    registrySearchCommand(query, {
+      type: options.type,
+      tags: options.tags,
+      limit: options.limit ? parseInt(options.limit, 10) : undefined,
+    })
+  })
+
+const cacheCommand = program
+  .command('cache')
+  .description('Manage local template cache')
+
+cacheCommand
+  .command('list')
+  .description('List cached templates')
+  .action(() => {
+    cacheListCommand()
+  })
+
+cacheCommand
+  .command('clear')
+  .description('Clear cached templates')
+  .argument('[template-id]', 'Template ID (optional)')
+  .argument('[version]', 'Version (optional)')
+  .action((templateId, version) => {
+    cacheClearCommand(templateId, version)
   })
 
 // If no command provided, show help
