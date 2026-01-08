@@ -5,6 +5,7 @@ import type { AddonTemplate, BaseTemplate } from '@hexp/catalog'
 import { Catalog } from '@hexp/catalog'
 import { createEngine, createWorkspace } from '@hexp/engine'
 import type { PostStep, PostStepResult } from '@hexp/shared'
+import { RegistryClient } from '@hexp/registry'
 import chalk from 'chalk'
 import { collectVars } from '../prompts/collectVars.js'
 import { selectAddons } from '../prompts/selectAddons.js'
@@ -229,20 +230,62 @@ export async function createCommand(options: CreateOptions): Promise<void> {
         )
       }
 
+      // Parse template@version syntax
+      const baseId = mergedOptions.base!
+      const [baseTemplateId, baseVersion] = baseId.includes('@')
+        ? baseId.split('@')
+        : [baseId, undefined]
+
       selectedBase =
-        bases.find((b: BaseTemplate) => b.id === mergedOptions.base!) || null
+        bases.find((b: BaseTemplate) => b.id === baseTemplateId) || null
+
+      // If not found locally and version specified, try registry
+      if (!selectedBase && baseVersion) {
+        logger.info(
+          `Template "${baseTemplateId}" not found locally. Checking registry...`
+        )
+        try {
+          const registryClient = new RegistryClient()
+          const { path: cachedPath } = await registryClient.downloadTemplateCached(
+            baseTemplateId,
+            baseVersion
+          )
+          logger.info(
+            `Downloaded template from registry: ${baseTemplateId}@${baseVersion}`
+          )
+          // TODO: Extract and load template from cache
+          // For now, show a message that remote templates need full implementation
+          logger.warn(
+            'Remote template support is partially implemented. Please use local templates for now.'
+          )
+        } catch (error) {
+          logger.warn(
+            `Failed to download from registry: ${error instanceof Error ? error.message : String(error)}`
+          )
+        }
+      }
+
       if (!selectedBase) {
         errorHandler.handleError(
-          new Error(`Base template "${mergedOptions.base}" not found`),
-          { baseId: mergedOptions.base }
+          new Error(`Base template "${baseTemplateId}" not found`),
+          { baseId: baseTemplateId }
         )
       }
 
       if (mergedOptions.addons && mergedOptions.addons.length > 0) {
+        // Parse addon@version syntax
+        const parsedAddons = mergedOptions.addons.map((addonId) => {
+          if (addonId.includes('@')) {
+            const [id] = addonId.split('@')
+            return id
+          }
+          return addonId
+        })
+
         selectedAddons = addons.filter((a: AddonTemplate) =>
-          mergedOptions.addons?.includes(a.id)
+          parsedAddons.includes(a.id)
         )
-        const notFound = mergedOptions.addons.filter(
+        const notFound = parsedAddons.filter(
           (id) => !selectedAddons.some((a) => a.id === id)
         )
         if (notFound.length > 0) {

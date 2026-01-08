@@ -18,7 +18,8 @@
     "dev": "rslib build --watch",
     "lint": "biome check .",
     "format": "biome format --write .",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "docs": "typedoc"
   },
   "devDependencies": {
     "@rslib/core": "^0.18.5",
