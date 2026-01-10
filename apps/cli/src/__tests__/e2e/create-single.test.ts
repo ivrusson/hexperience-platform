@@ -118,7 +118,7 @@ describe('E2E: Create single package', () => {
         base: 'single-base',
         name: 'test-single-project',
         output: outputDir,
-        vars: {
+        variables: {
           appName: 'test-app',
         },
       })
@@ -176,7 +176,7 @@ describe('E2E: Create single package', () => {
         base: 'single-base',
         name: 'test-single-project',
         output: outputDir,
-        vars: {
+        variables: {
           appName: 'test-app',
         },
       })

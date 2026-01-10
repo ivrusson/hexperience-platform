@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { describe, test, mock } from 'node:test'
+import { describe, mock, test } from 'node:test'
 import * as clackPrompts from '@clack/prompts'
 import { createCommand } from '../../commands/create.js'
 
@@ -142,34 +142,43 @@ describe('E2E: Interactive flow', () => {
 
   test.afterEach(async () => {
     await rm(tempDir, { recursive: true, force: true })
-    mock.restore()
   })
 
   test('should complete full interactive flow from selection to generation', async () => {
     // Mock interactive responses
     // 1. Select base template
-    mockSelect.mock.mockImplementationOnce(() => Promise.resolve('test-base'))
+    mockSelect.mock.mockImplementationOnce(
+      () => Promise.resolve('test-base') as any
+    )
 
     // 2. Select addons (user selects test-addon)
-    mockMultiselect.mock.mockImplementationOnce(() =>
-      Promise.resolve(['test-addon'])
+    mockMultiselect.mock.mockImplementationOnce(
+      () => Promise.resolve(['test-addon']) as any
     )
 
     // 3. Enter project name
-    mockText.mock.mockImplementationOnce(({ message }: { message: string }) => {
+    mockText.mock.mockImplementationOnce((({
+      message,
+    }: {
+      message: string
+    }) => {
       if (message === 'Project name:') {
         return Promise.resolve('my-test-project')
       }
       return Promise.resolve('')
-    })
+    }) as any)
 
     // 4. Enter application name (from base prompts)
-    mockText.mock.mockImplementationOnce(({ message }: { message: string }) => {
+    mockText.mock.mockImplementationOnce((({
+      message,
+    }: {
+      message: string
+    }) => {
       if (message === 'Application name') {
         return Promise.resolve('my-app')
       }
       return Promise.resolve('')
-    })
+    }) as any)
 
     const originalCwd = process.cwd()
     const originalLog = console.log
@@ -224,22 +233,34 @@ describe('E2E: Interactive flow', () => {
 
   test('should handle interactive flow with no addons selected', async () => {
     // Mock interactive responses
-    mockSelect.mock.mockImplementationOnce(() => Promise.resolve('test-base'))
-    mockMultiselect.mock.mockImplementationOnce(() => Promise.resolve([]))
+    mockSelect.mock.mockImplementationOnce(
+      () => Promise.resolve('test-base') as any
+    )
+    mockMultiselect.mock.mockImplementationOnce(
+      () => Promise.resolve([]) as any
+    )
 
-    mockText.mock.mockImplementationOnce(({ message }: { message: string }) => {
+    mockText.mock.mockImplementationOnce((({
+      message,
+    }: {
+      message: string
+    }) => {
       if (message === 'Project name:') {
         return Promise.resolve('my-test-project')
       }
       return Promise.resolve('')
-    })
+    }) as any)
 
-    mockText.mock.mockImplementationOnce(({ message }: { message: string }) => {
+    mockText.mock.mockImplementationOnce((({
+      message,
+    }: {
+      message: string
+    }) => {
       if (message === 'Application name') {
         return Promise.resolve('my-app')
       }
       return Promise.resolve('')
-    })
+    }) as any)
 
     const originalCwd = process.cwd()
     const originalLog = console.log
@@ -272,11 +293,15 @@ describe('E2E: Interactive flow', () => {
 
   test('should validate project name in interactive flow', async () => {
     // Mock interactive responses with invalid name first, then valid
-    mockSelect.mock.mockImplementationOnce(() => Promise.resolve('test-base'))
-    mockMultiselect.mock.mockImplementationOnce(() => Promise.resolve([]))
+    mockSelect.mock.mockImplementationOnce(
+      () => Promise.resolve('test-base') as any
+    )
+    mockMultiselect.mock.mockImplementationOnce(
+      () => Promise.resolve([]) as any
+    )
 
     let callCount = 0
-    mockText.mock.mockImplementation(({ message, validate }: any) => {
+    mockText.mock.mockImplementation(({ message, validate }: any): any => {
       if (message === 'Project name:') {
         callCount++
         if (callCount === 1) {

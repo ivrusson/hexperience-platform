@@ -1,11 +1,5 @@
 import { request } from 'undici'
-import type {
-  ListTemplatesResponse,
-  ListVersionsResponse,
-  RegistryClientOptions,
-  TemplateMetadata,
-  TemplateVersionDetail,
-} from './types.js'
+import { TemplateCache } from './cache.js'
 import {
   NetworkError,
   RateLimitError,
@@ -13,8 +7,14 @@ import {
   TemplateNotFoundError,
   VersionNotFoundError,
 } from './errors.js'
+import type {
+  ListTemplatesResponse,
+  ListVersionsResponse,
+  RegistryClientOptions,
+  TemplateMetadata,
+  TemplateVersionDetail,
+} from './types.js'
 import { findBestVersion } from './version.js'
-import { TemplateCache } from './cache.js'
 
 /**
  * Registry API client
@@ -47,10 +47,17 @@ export class RegistryClient {
     for (let attempt = 0; attempt <= this.retries; attempt++) {
       try {
         const response = await request(url, {
-          method: options.method || 'GET',
+          method: (options.method || 'GET') as
+            | 'GET'
+            | 'POST'
+            | 'PUT'
+            | 'DELETE'
+            | 'PATCH'
+            | 'HEAD'
+            | 'OPTIONS',
           headers: {
             'User-Agent': 'hexperience-cli',
-            'Accept': 'application/json',
+            Accept: 'application/json',
             ...options.headers,
           },
           bodyTimeout: this.timeout,
@@ -102,9 +109,8 @@ export class RegistryClient {
 
         // Retry with exponential backoff
         if (attempt < this.retries) {
-          const delay = this.retryDelay * Math.pow(2, attempt)
+          const delay = this.retryDelay * 2 ** attempt
           await new Promise((resolve) => setTimeout(resolve, delay))
-          continue
         }
       }
     }
@@ -118,12 +124,14 @@ export class RegistryClient {
   /**
    * List all templates
    */
-  async listTemplates(options: {
-    type?: 'base' | 'addon'
-    search?: string
-    limit?: number
-    offset?: number
-  } = {}): Promise<ListTemplatesResponse> {
+  async listTemplates(
+    options: {
+      type?: 'base' | 'addon'
+      search?: string
+      limit?: number
+      offset?: number
+    } = {}
+  ): Promise<ListTemplatesResponse> {
     const params = new URLSearchParams()
     if (options.type) params.append('type', options.type)
     if (options.search) params.append('search', options.search)
@@ -241,7 +249,10 @@ export class RegistryClient {
       const buffer = await response.body.arrayBuffer()
       return Buffer.from(buffer)
     } catch (error) {
-      if (error instanceof TemplateNotFoundError || error instanceof VersionNotFoundError) {
+      if (
+        error instanceof TemplateNotFoundError ||
+        error instanceof VersionNotFoundError
+      ) {
         throw error
       }
       throw new NetworkError(
@@ -258,7 +269,11 @@ export class RegistryClient {
     templateId: string,
     versionRange: string
   ): Promise<string> {
-    if (versionRange === 'latest' || versionRange === '*' || versionRange === '') {
+    if (
+      versionRange === 'latest' ||
+      versionRange === '*' ||
+      versionRange === ''
+    ) {
       const latest = await this.getLatestVersion(templateId)
       return latest.version
     }
@@ -292,12 +307,7 @@ export class RegistryClient {
         // Validate cache
         const versionDetail = await this.getVersion(templateId, version)
         if (
-          this.cache.isValid(
-            templateId,
-            version,
-            7,
-            versionDetail.checksum
-          )
+          this.cache.isValid(templateId, version, 7, versionDetail.checksum)
         ) {
           return { path: cachedPath, version }
         }

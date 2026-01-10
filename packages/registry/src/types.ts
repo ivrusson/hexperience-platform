@@ -64,7 +64,7 @@ export interface ListVersionsResponse {
 /**
  * Registry error response
  */
-export interface RegistryError {
+export interface RegistryErrorResponse {
   error: {
     code: string
     message: string
