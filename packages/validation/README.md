@@ -4,25 +4,42 @@ Sistema de validación de compatibilidad y resolución de dependencias para Hexp
 
 ## Componentes
 
-- **CompatibilityChecker**: Valida que la base provee todas las capabilities requeridas por los addons
+- **checkCompatibility**: Valida que la base provee todas las capabilities requeridas por los addons
 - **ConflictDetector**: Detecta conflictos entre addons usando el campo `conflicts`
-- **DependencyResolver**: Resuelve el orden correcto de aplicación de addons usando topological sort
-- **FileCollisionDetector**: Detecta colisiones de archivos antes de aplicar operaciones
+- **resolveDependencies**: Resuelve el orden correcto de aplicación de addons usando topological sort
+- **checkFileCollisions**: Detecta colisiones de archivos antes de aplicar operaciones
 
 ## Uso
 
 ```typescript
-import { CompatibilityChecker, ConflictDetector, DependencyResolver, FileCollisionDetector } from '@hexp/validation'
+import {
+  checkCompatibility,
+  getCompatibilityErrorMessage,
+  ConflictDetector,
+  resolveDependencies,
+  getDependencyErrorMessage,
+  checkFileCollisions,
+  getFileCollisionErrorMessage,
+} from '@hexp/validation'
 
 // Validar compatibilidad
-const compatibility = CompatibilityChecker.check(base, addons)
+const compatibility = checkCompatibility(base, addons)
+if (!compatibility.isCompatible) {
+  const error = getCompatibilityErrorMessage(compatibility, base)
+}
 
 // Detectar conflictos
 const conflicts = ConflictDetector.check(addons)
 
 // Resolver orden de dependencias
-const resolved = DependencyResolver.resolve(addons, base.capabilities)
+const resolved = resolveDependencies(addons, base.capabilities)
+if (resolved.hasCycles) {
+  const error = getDependencyErrorMessage(resolved)
+}
 
 // Detectar colisiones de archivos
-const collisions = FileCollisionDetector.check(baseWithOps, addonsWithOps)
+const collisions = checkFileCollisions(baseWithOps, addonsWithOps)
+if (collisions.hasCollisions) {
+  const error = getFileCollisionErrorMessage(collisions)
+}
 ```

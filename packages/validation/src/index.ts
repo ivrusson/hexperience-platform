@@ -4,11 +4,17 @@
  */
 
 export type { CompatibilityResult } from './compatibility'
-export { CompatibilityChecker } from './compatibility'
+export {
+  checkCompatibility,
+  getCompatibilityErrorMessage,
+} from './compatibility'
 export type { ConflictInfo, ConflictResult } from './conflicts'
 export { ConflictDetector } from './conflicts'
 export type { ResolvedOrder } from './dependencies'
-export { DependencyResolver } from './dependencies'
+export {
+  getDependencyErrorMessage,
+  resolveDependencies,
+} from './dependencies'
 export {
   CompatibilityError,
   ConflictError,
@@ -20,4 +26,7 @@ export type {
   CollisionResult,
   TemplateWithOps,
 } from './fileCollisions'
-export { FileCollisionDetector } from './fileCollisions'
+export {
+  checkFileCollisions,
+  getFileCollisionErrorMessage,
+} from './fileCollisions'

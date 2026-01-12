@@ -16,6 +16,6 @@ export {
   ManifestValidationError,
 } from './errors'
 // Internal utilities (exported for testing)
-export { ManifestLoader } from './loader'
+export { loadManifest } from './loader'
 export type { CatalogResult } from './resolver'
-export { CatalogResolver } from './resolver'
+export { scanTemplates } from './resolver'

@@ -8,9 +8,9 @@ import {
   ManifestParseError,
   ManifestValidationError,
 } from '../errors'
-import { ManifestLoader } from '../loader'
+import { loadManifest } from '../loader'
 
-describe('ManifestLoader', () => {
+describe('loadManifest', () => {
   let testDir: string
 
   test.beforeEach(async () => {
@@ -35,7 +35,7 @@ describe('ManifestLoader', () => {
 
       await writeFile(manifestPath, JSON.stringify(manifest, null, 2))
 
-      const result = await ManifestLoader.load(manifestPath)
+      const result = await loadManifest(manifestPath)
 
       strictEqual(result.type, 'base')
       strictEqual(result.id, 'test-base')
@@ -57,7 +57,7 @@ describe('ManifestLoader', () => {
 
       await writeFile(manifestPath, JSON.stringify(manifest, null, 2))
 
-      const result = await ManifestLoader.load(manifestPath)
+      const result = await loadManifest(manifestPath)
 
       strictEqual(result.type, 'addon')
       strictEqual(result.id, 'test-addon')
@@ -69,7 +69,7 @@ describe('ManifestLoader', () => {
       const manifestPath = join(testDir, 'nonexistent.json')
 
       await rejects(
-        () => ManifestLoader.load(manifestPath),
+        () => loadManifest(manifestPath),
         (error) => {
           return (
             error instanceof ManifestNotFoundError &&
@@ -84,7 +84,7 @@ describe('ManifestLoader', () => {
       await writeFile(manifestPath, '{ invalid json }')
 
       await rejects(
-        () => ManifestLoader.load(manifestPath),
+        () => loadManifest(manifestPath),
         (error) => {
           return (
             error instanceof ManifestParseError && error.path === manifestPath
@@ -103,7 +103,7 @@ describe('ManifestLoader', () => {
       await writeFile(manifestPath, JSON.stringify(manifest))
 
       await rejects(
-        () => ManifestLoader.load(manifestPath),
+        () => loadManifest(manifestPath),
         (error) => {
           return (
             error instanceof ManifestValidationError &&
@@ -127,7 +127,7 @@ describe('ManifestLoader', () => {
       await writeFile(manifestPath, JSON.stringify(manifest))
 
       await rejects(
-        () => ManifestLoader.load(manifestPath),
+        () => loadManifest(manifestPath),
         (error) => {
           return (
             error instanceof ManifestValidationError &&
@@ -150,7 +150,7 @@ describe('ManifestLoader', () => {
       await writeFile(manifestPath, JSON.stringify(manifest))
 
       await rejects(
-        () => ManifestLoader.load(manifestPath),
+        () => loadManifest(manifestPath),
         (error) => {
           return (
             error instanceof ManifestValidationError &&
@@ -172,7 +172,7 @@ describe('ManifestLoader', () => {
       await writeFile(manifestPath, JSON.stringify(manifest))
 
       await rejects(
-        () => ManifestLoader.load(manifestPath),
+        () => loadManifest(manifestPath),
         (error) => {
           return error instanceof ManifestValidationError
         }
@@ -191,7 +191,7 @@ describe('ManifestLoader', () => {
 
       await writeFile(manifestPath, JSON.stringify(manifest))
 
-      const result = await ManifestLoader.load(manifestPath)
+      const result = await loadManifest(manifestPath)
 
       strictEqual(result.type, 'addon')
       ok(Array.isArray(result.conflicts))
@@ -219,7 +219,7 @@ describe('ManifestLoader', () => {
 
       await writeFile(manifestPath, JSON.stringify(manifest))
 
-      const result = await ManifestLoader.load(manifestPath)
+      const result = await loadManifest(manifestPath)
 
       strictEqual(result.projectType, 'monorepo')
       ok(Array.isArray(result.prompts))

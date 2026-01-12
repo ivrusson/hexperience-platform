@@ -1,9 +1,9 @@
 import { ok, strictEqual } from 'node:assert'
 import { describe, test } from 'node:test'
 import type { AddonTemplate } from '@hexp/catalog'
-import { DependencyResolver } from '../dependencies'
+import { getDependencyErrorMessage, resolveDependencies } from '../dependencies'
 
-describe('DependencyResolver', () => {
+describe('resolveDependencies', () => {
   test('should resolve simple linear order', () => {
     const addons: AddonTemplate[] = [
       {
@@ -32,7 +32,7 @@ describe('DependencyResolver', () => {
       },
     ]
 
-    const result = DependencyResolver.resolve(addons, ['base-cap'])
+    const result = resolveDependencies(addons, ['base-cap'])
 
     strictEqual(result.hasCycles, false)
     strictEqual(result.orderedAddons.length, 3)
@@ -68,7 +68,7 @@ describe('DependencyResolver', () => {
       },
     ]
 
-    const result = DependencyResolver.resolve(addons, ['base-cap'])
+    const result = resolveDependencies(addons, ['base-cap'])
 
     strictEqual(result.hasCycles, false)
     strictEqual(result.orderedAddons.length, 3)
@@ -106,7 +106,7 @@ describe('DependencyResolver', () => {
       },
     ]
 
-    const result = DependencyResolver.resolve(addons, ['base-cap'])
+    const result = resolveDependencies(addons, ['base-cap'])
 
     strictEqual(result.hasCycles, false)
     const indexA = result.orderedAddons.findIndex((a) => a.id === 'addon-a')
@@ -136,7 +136,7 @@ describe('DependencyResolver', () => {
       },
     ]
 
-    const result = DependencyResolver.resolve(addons, [])
+    const result = resolveDependencies(addons, [])
 
     strictEqual(result.hasCycles, true)
     strictEqual(result.cycles.length, 1)
@@ -172,7 +172,7 @@ describe('DependencyResolver', () => {
       },
     ]
 
-    const result = DependencyResolver.resolve(addons, [])
+    const result = resolveDependencies(addons, [])
 
     strictEqual(result.hasCycles, true)
     strictEqual(result.cycles.length, 1)
@@ -200,7 +200,7 @@ describe('DependencyResolver', () => {
       },
     ]
 
-    const result = DependencyResolver.resolve(addons, [])
+    const result = resolveDependencies(addons, [])
 
     strictEqual(result.hasCycles, false)
     strictEqual(result.orderedAddons.length, 2)
@@ -227,8 +227,8 @@ describe('DependencyResolver', () => {
       },
     ]
 
-    const result = DependencyResolver.resolve(addons, [])
-    const errorMessage = DependencyResolver.getErrorMessage(result)
+    const result = resolveDependencies(addons, [])
+    const errorMessage = getDependencyErrorMessage(result)
 
     ok(errorMessage.includes('Cycle'))
     ok(errorMessage.includes('addon-a') || errorMessage.includes('addon-b'))

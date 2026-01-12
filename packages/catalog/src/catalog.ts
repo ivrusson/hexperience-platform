@@ -1,6 +1,6 @@
 import { resolve } from 'node:path'
 import type { AddonTemplate, BaseTemplate } from '@hexp/shared'
-import { CatalogResolver, type CatalogResult } from './resolver'
+import { type CatalogResult, scanTemplates } from './resolver'
 
 /**
  * Main catalog class for discovering and querying templates
@@ -73,7 +73,7 @@ export class Catalog {
    */
   private async getCatalogResult(): Promise<CatalogResult> {
     if (this.cache === null) {
-      this.cache = await CatalogResolver.scanTemplates(this.templatesDir)
+      this.cache = await scanTemplates(this.templatesDir)
     }
     return this.cache
   }

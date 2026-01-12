@@ -1,9 +1,12 @@
 import { ok, strictEqual } from 'node:assert'
 import { describe, test } from 'node:test'
 import type { AddonTemplate, BaseTemplate } from '@hexp/catalog'
-import { CompatibilityChecker } from '../compatibility'
+import {
+  checkCompatibility,
+  getCompatibilityErrorMessage,
+} from '../compatibility'
 
-describe('CompatibilityChecker', () => {
+describe('checkCompatibility', () => {
   test('should return compatible when base provides all required capabilities', () => {
     const base: BaseTemplate = {
       id: 'test-base',
@@ -30,7 +33,7 @@ describe('CompatibilityChecker', () => {
       },
     ]
 
-    const result = CompatibilityChecker.check(base, addons)
+    const result = checkCompatibility(base, addons)
 
     strictEqual(result.isCompatible, true)
     strictEqual(result.missingCapabilities.size, 0)
@@ -57,7 +60,7 @@ describe('CompatibilityChecker', () => {
       },
     ]
 
-    const result = CompatibilityChecker.check(base, addons)
+    const result = checkCompatibility(base, addons)
 
     strictEqual(result.isCompatible, false)
     strictEqual(result.missingCapabilities.size, 1)
@@ -96,7 +99,7 @@ describe('CompatibilityChecker', () => {
       },
     ]
 
-    const result = CompatibilityChecker.check(base, addons)
+    const result = checkCompatibility(base, addons)
 
     strictEqual(result.isCompatible, true)
     strictEqual(result.missingCapabilities.size, 0)
@@ -138,7 +141,7 @@ describe('CompatibilityChecker', () => {
       },
     ]
 
-    const result = CompatibilityChecker.check(base, addons)
+    const result = checkCompatibility(base, addons)
 
     strictEqual(result.isCompatible, false)
     strictEqual(result.missingCapabilities.size, 1)
@@ -166,8 +169,8 @@ describe('CompatibilityChecker', () => {
       },
     ]
 
-    const result = CompatibilityChecker.check(base, addons)
-    const errorMessage = CompatibilityChecker.getErrorMessage(result, base)
+    const result = checkCompatibility(base, addons)
+    const errorMessage = getCompatibilityErrorMessage(result, base)
 
     ok(errorMessage.includes('addon-1'))
     ok(errorMessage.includes('orm'))

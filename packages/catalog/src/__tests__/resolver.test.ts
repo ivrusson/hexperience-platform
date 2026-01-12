@@ -3,9 +3,9 @@ import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
-import { CatalogResolver } from '../resolver'
+import { scanTemplates } from '../resolver'
 
-describe('CatalogResolver', () => {
+describe('scanTemplates', () => {
   let testDir: string
   let basesDir: string
   let addonsDir: string
@@ -25,7 +25,7 @@ describe('CatalogResolver', () => {
 
   describe('scanTemplates', () => {
     test('should scan empty directories', async () => {
-      const result = await CatalogResolver.scanTemplates(testDir)
+      const result = await scanTemplates(testDir)
 
       strictEqual(result.bases.length, 0)
       strictEqual(result.addons.length, 0)
@@ -49,7 +49,7 @@ describe('CatalogResolver', () => {
         JSON.stringify(manifest1)
       )
 
-      const result = await CatalogResolver.scanTemplates(testDir)
+      const result = await scanTemplates(testDir)
 
       strictEqual(result.bases.length, 1)
       strictEqual(result.bases[0].id, 'base-1')
@@ -73,7 +73,7 @@ describe('CatalogResolver', () => {
         JSON.stringify(manifest1)
       )
 
-      const result = await CatalogResolver.scanTemplates(testDir)
+      const result = await scanTemplates(testDir)
 
       strictEqual(result.addons.length, 1)
       strictEqual(result.addons[0].id, 'addon-1')
@@ -97,7 +97,7 @@ describe('CatalogResolver', () => {
         JSON.stringify(manifest)
       )
 
-      const result = await CatalogResolver.scanTemplates(testDir)
+      const result = await scanTemplates(testDir)
 
       strictEqual(result.bases.length, 1)
       strictEqual(result.bases[0].id, 'nested-base')
@@ -129,7 +129,7 @@ describe('CatalogResolver', () => {
         JSON.stringify(validManifest)
       )
 
-      const result = await CatalogResolver.scanTemplates(testDir)
+      const result = await scanTemplates(testDir)
 
       // Should still load the valid one
       strictEqual(result.bases.length, 1)
@@ -162,7 +162,7 @@ describe('CatalogResolver', () => {
         JSON.stringify(validManifest)
       )
 
-      const result = await CatalogResolver.scanTemplates(testDir)
+      const result = await scanTemplates(testDir)
 
       strictEqual(result.bases.length, 1)
       strictEqual(result.bases[0].id, 'base-2')
@@ -172,7 +172,7 @@ describe('CatalogResolver', () => {
     test('should handle missing directories gracefully', async () => {
       await rm(basesDir, { recursive: true, force: true })
 
-      const result = await CatalogResolver.scanTemplates(testDir)
+      const result = await scanTemplates(testDir)
 
       strictEqual(result.bases.length, 0)
       strictEqual(result.addons.length, 0)
@@ -219,7 +219,7 @@ describe('CatalogResolver', () => {
         )
       }
 
-      const result = await CatalogResolver.scanTemplates(testDir)
+      const result = await scanTemplates(testDir)
 
       strictEqual(result.bases.length, 3)
       strictEqual(result.addons.length, 2)

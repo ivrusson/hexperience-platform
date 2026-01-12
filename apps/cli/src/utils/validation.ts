@@ -1,10 +1,13 @@
 import type { AddonTemplate, BaseTemplate } from '@hexp/catalog'
 import type { Operation } from '@hexp/shared'
 import {
-  CompatibilityChecker,
   ConflictDetector,
-  DependencyResolver,
-  FileCollisionDetector,
+  checkCompatibility,
+  checkFileCollisions,
+  getCompatibilityErrorMessage,
+  getDependencyErrorMessage,
+  getFileCollisionErrorMessage,
+  resolveDependencies,
   type TemplateWithOps,
 } from '@hexp/validation'
 
@@ -59,9 +62,9 @@ export function validateGenerationPlan(
   const warnings: string[] = []
 
   // 1. Check compatibility
-  const compatibilityResult = CompatibilityChecker.check(base, addons)
+  const compatibilityResult = checkCompatibility(base, addons)
   if (!compatibilityResult.isCompatible) {
-    errors.push(CompatibilityChecker.getErrorMessage(compatibilityResult, base))
+    errors.push(getCompatibilityErrorMessage(compatibilityResult, base))
   }
 
   // 2. Check conflicts
@@ -71,9 +74,9 @@ export function validateGenerationPlan(
   }
 
   // 3. Resolve dependencies
-  const dependencyResult = DependencyResolver.resolve(addons, base.capabilities)
+  const dependencyResult = resolveDependencies(addons, base.capabilities)
   if (dependencyResult.hasCycles) {
-    errors.push(DependencyResolver.getErrorMessage(dependencyResult))
+    errors.push(getDependencyErrorMessage(dependencyResult))
   }
 
   // 4. Check file collisions
@@ -87,12 +90,9 @@ export function validateGenerationPlan(
     ops,
   }))
 
-  const collisionResult = FileCollisionDetector.check(
-    baseWithOps,
-    addonsWithOps
-  )
+  const collisionResult = checkFileCollisions(baseWithOps, addonsWithOps)
   if (collisionResult.hasCollisions) {
-    errors.push(FileCollisionDetector.getErrorMessage(collisionResult))
+    errors.push(getFileCollisionErrorMessage(collisionResult))
   }
 
   const isValid = errors.length === 0

@@ -236,7 +236,8 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       }
 
       // Parse template@version syntax
-      const baseId = mergedOptions.base
+      // After the check above, base must be defined (handleError returns never)
+      const baseId = mergedOptions.base as string
       const [baseTemplateId, baseVersion] = baseId.includes('@')
         ? baseId.split('@')
         : [baseId, undefined]

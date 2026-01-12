@@ -1,8 +1,12 @@
 import { ok, strictEqual } from 'node:assert'
 import { describe, test } from 'node:test'
-import { FileCollisionDetector, type TemplateWithOps } from '../fileCollisions'
+import {
+  checkFileCollisions,
+  getFileCollisionErrorMessage,
+  type TemplateWithOps,
+} from '../fileCollisions'
 
-describe('FileCollisionDetector', () => {
+describe('checkFileCollisions', () => {
   test('should return no collisions when files are unique', () => {
     const base: TemplateWithOps = {
       templateDir: '/base',
@@ -28,7 +32,7 @@ describe('FileCollisionDetector', () => {
       },
     ]
 
-    const result = FileCollisionDetector.check(base, addons)
+    const result = checkFileCollisions(base, addons)
 
     strictEqual(result.hasCollisions, false)
     strictEqual(result.collisions.length, 0)
@@ -59,7 +63,7 @@ describe('FileCollisionDetector', () => {
       },
     ]
 
-    const result = FileCollisionDetector.check(base, addons)
+    const result = checkFileCollisions(base, addons)
 
     strictEqual(result.hasCollisions, true)
     strictEqual(result.collisions.length, 1)
@@ -92,7 +96,7 @@ describe('FileCollisionDetector', () => {
       },
     ]
 
-    const result = FileCollisionDetector.check(base, addons)
+    const result = checkFileCollisions(base, addons)
 
     strictEqual(result.hasCollisions, true)
     strictEqual(result.collisions.length, 1)
@@ -124,7 +128,7 @@ describe('FileCollisionDetector', () => {
       },
     ]
 
-    const result = FileCollisionDetector.check(base, addons)
+    const result = checkFileCollisions(base, addons)
 
     strictEqual(result.hasCollisions, false)
     strictEqual(result.collisions.length, 0)
@@ -157,7 +161,7 @@ describe('FileCollisionDetector', () => {
       },
     ]
 
-    const result = FileCollisionDetector.check(base, addons)
+    const result = checkFileCollisions(base, addons)
 
     strictEqual(result.hasCollisions, false)
   })
@@ -188,7 +192,7 @@ describe('FileCollisionDetector', () => {
       },
     ]
 
-    const result = FileCollisionDetector.check(base, addons)
+    const result = checkFileCollisions(base, addons)
 
     strictEqual(result.hasCollisions, true)
     strictEqual(result.collisions.length, 1)
@@ -219,7 +223,7 @@ describe('FileCollisionDetector', () => {
       },
     ]
 
-    const result = FileCollisionDetector.check(base, addons)
+    const result = checkFileCollisions(base, addons)
 
     strictEqual(result.collisions[0].sources.length, 2)
     ok(result.collisions[0].sources.includes('/base'))
@@ -251,8 +255,8 @@ describe('FileCollisionDetector', () => {
       },
     ]
 
-    const result = FileCollisionDetector.check(base, addons)
-    const errorMessage = FileCollisionDetector.getErrorMessage(result)
+    const result = checkFileCollisions(base, addons)
+    const errorMessage = getFileCollisionErrorMessage(result)
 
     ok(errorMessage.includes('collision.txt'))
     ok(errorMessage.includes('copy'))
