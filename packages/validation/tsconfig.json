@@ -17,8 +17,5 @@
     "downlevelIteration": true
   },
   "include": ["src"],
-  "references": [
-    { "path": "../shared" },
-    { "path": "../catalog" }
-  ]
+  "references": [{ "path": "../shared" }, { "path": "../catalog" }]
 }

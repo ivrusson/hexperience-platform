@@ -1,8 +1,8 @@
 import { Box, Text } from 'ink'
 import { useEffect, useState } from 'react'
-import { useFocus } from '../hooks/useFocus.js'
-import { useKeyboard } from '../hooks/useKeyboard.js'
-import { monorepoStore, type Package } from '../stores/monorepoStore.js'
+import { useFocus } from '../hooks/useFocus'
+import { useKeyboard } from '../hooks/useKeyboard'
+import { monorepoStore, type Package } from '../stores/monorepoStore'
 
 export function MonorepoManager() {
   const [packages, setPackages] = useState<Package[]>([])
@@ -10,17 +10,17 @@ export function MonorepoManager() {
   const [mode, setMode] = useState<'list' | 'edit' | 'add'>('list')
   const [view, setView] = useState<'all' | 'apps' | 'packages'>('all')
 
-  const updatePackages = () => {
-    if (view === 'apps') {
-      setPackages(monorepoStore.getApps())
-    } else if (view === 'packages') {
-      setPackages(monorepoStore.getPackagesOnly())
-    } else {
-      setPackages(monorepoStore.getPackages())
-    }
-  }
-
   useEffect(() => {
+    const updatePackages = () => {
+      if (view === 'apps') {
+        setPackages(monorepoStore.getApps())
+      } else if (view === 'packages') {
+        setPackages(monorepoStore.getPackagesOnly())
+      } else {
+        setPackages(monorepoStore.getPackages())
+      }
+    }
+
     updatePackages()
     const unsubscribe = monorepoStore.subscribe(() => {
       updatePackages()

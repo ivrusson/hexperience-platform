@@ -6,8 +6,8 @@ import type {
   ExecutionContext,
   OperationResult,
 } from '@hexp/shared'
-import { OperationError } from '../errors.js'
-import { expandGlob, isGlobPattern } from '../utils/glob.js'
+import { OperationError } from '../errors'
+import { expandGlob, isGlobPattern } from '../utils/glob'
 
 export async function executeCopy(
   operation: CopyOperation,

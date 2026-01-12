@@ -1,12 +1,11 @@
 import { ok, rejects, strictEqual } from 'node:assert'
-import { existsSync } from 'node:fs'
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
 import type { ExecutionContext, TextReplaceOperation } from '@hexp/shared'
-import { OperationError } from '../../errors.js'
-import { executeTextReplace } from '../../operations/text-replace.js'
+import { OperationError } from '../../errors'
+import { executeTextReplace } from '../../operations/text-replace'
 
 describe('Text Replace Operation', () => {
   let workspaceDir: string

@@ -6,9 +6,9 @@ import type {
   PostStepResult,
   Workspace,
 } from '@hexp/shared'
-import { OperationError } from './errors.js'
-import { executeOperation } from './operations/index.js'
-import { executePostStep } from './post-steps/index.js'
+import { OperationError } from './errors'
+import { executeOperation } from './operations/index'
+import { executePostStep } from './post-steps/index'
 
 export interface TemplateWithOps {
   templateDir: string

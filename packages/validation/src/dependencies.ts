@@ -75,7 +75,10 @@ export class DependencyResolver {
     }
 
     // Detect cycles and perform topological sort
-    const cycles = DependencyResolver.detectCycles(dependencyGraph, Array.from(addonMap.keys()))
+    const cycles = DependencyResolver.detectCycles(
+      dependencyGraph,
+      Array.from(addonMap.keys())
+    )
     const hasCycles = cycles.length > 0
 
     // If there are cycles, we can't resolve order
@@ -89,7 +92,10 @@ export class DependencyResolver {
     }
 
     // Perform topological sort using Kahn's algorithm
-    const orderedAddons = DependencyResolver.topologicalSort(dependencyGraph, addonMap)
+    const orderedAddons = DependencyResolver.topologicalSort(
+      dependencyGraph,
+      addonMap
+    )
 
     return {
       orderedAddons,

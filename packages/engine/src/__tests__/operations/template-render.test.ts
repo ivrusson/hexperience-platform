@@ -5,8 +5,8 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
 import type { ExecutionContext, TemplateRenderOperation } from '@hexp/shared'
-import { OperationError } from '../../errors.js'
-import { executeTemplateRender } from '../../operations/template-render.js'
+import { OperationError } from '../../errors'
+import { executeTemplateRender } from '../../operations/template-render'
 
 describe('Template Render Operation', () => {
   let templateDir: string

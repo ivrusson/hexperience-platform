@@ -1,12 +1,11 @@
 import { ok, rejects, strictEqual } from 'node:assert'
-import { existsSync } from 'node:fs'
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
 import type { ExecutionContext, TextInsertOperation } from '@hexp/shared'
-import { OperationError } from '../../errors.js'
-import { executeTextInsert } from '../../operations/text-insert.js'
+import { OperationError } from '../../errors'
+import { executeTextInsert } from '../../operations/text-insert'
 
 describe('Text Insert Operation', () => {
   let workspaceDir: string

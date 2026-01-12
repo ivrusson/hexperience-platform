@@ -1,8 +1,8 @@
+import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { readdir, rm } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { createHash } from 'node:crypto'
 
 /**
  * Get the cache directory path
@@ -19,7 +19,10 @@ export function getCacheDir(): string {
 /**
  * Get template cache path
  */
-export function getTemplateCachePath(templateId: string, version: string): string {
+export function getTemplateCachePath(
+  templateId: string,
+  version: string
+): string {
   return join(getCacheDir(), templateId, version)
 }
 
@@ -75,7 +78,10 @@ export function isCached(templateId: string, version: string): boolean {
 /**
  * Get cached template path
  */
-export function getCachedTemplatePath(templateId: string, version: string): string | null {
+export function getCachedTemplatePath(
+  templateId: string,
+  version: string
+): string | null {
   const cachePath = getTemplateCachePath(templateId, version)
   const archivePath = join(cachePath, 'template.tar.gz')
   if (existsSync(archivePath)) {
@@ -90,7 +96,13 @@ export function getCachedTemplatePath(templateId: string, version: string): stri
 export function getCacheMetadata(
   templateId: string,
   version: string
-): { templateId: string; version: string; cachedAt: string; checksum?: string; size: number } | null {
+): {
+  templateId: string
+  version: string
+  cachedAt: string
+  checksum?: string
+  size: number
+} | null {
   const cachePath = getTemplateCachePath(templateId, version)
   const metadataPath = join(cachePath, 'metadata.json')
   if (!existsSync(metadataPath)) {
@@ -140,7 +152,12 @@ export async function listCachedTemplates(): Promise<
     return []
   }
 
-  const templates: Array<{ templateId: string; version: string; cachedAt: string; size: number }> = []
+  const templates: Array<{
+    templateId: string
+    version: string
+    cachedAt: string
+    size: number
+  }> = []
 
   try {
     const templateDirs = await readdir(cacheDir, { withFileTypes: true })
@@ -177,7 +194,10 @@ export async function listCachedTemplates(): Promise<
 /**
  * Clear cache for a specific template or all templates
  */
-export async function clearCache(templateId?: string, version?: string): Promise<void> {
+export async function clearCache(
+  templateId?: string,
+  version?: string
+): Promise<void> {
   const cacheDir = getCacheDir()
   if (!existsSync(cacheDir)) {
     return

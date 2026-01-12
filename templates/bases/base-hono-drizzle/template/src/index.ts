@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { db } from './db/index.js'
+
 // @addon:imports
 
 const app = new Hono()
@@ -25,5 +25,3 @@ export default {
   port,
   fetch: app.fetch,
 }
-
-console.log(`Server running on http://localhost:${port}`)

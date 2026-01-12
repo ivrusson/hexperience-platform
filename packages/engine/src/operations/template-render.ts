@@ -1,13 +1,13 @@
 import { existsSync } from 'node:fs'
-import { dirname, join, relative, resolve } from 'node:path'
+import { join, relative, resolve } from 'node:path'
 import type {
   ExecutionContext,
   OperationResult,
   TemplateRenderOperation,
 } from '@hexp/shared'
-import { OperationError } from '../errors.js'
-import { renderTemplate } from '../renderer/template-renderer.js'
-import { expandGlob, getAllFiles, isGlobPattern } from '../utils/glob.js'
+import { OperationError } from '../errors'
+import { renderTemplate } from '../renderer/template-renderer'
+import { expandGlob, isGlobPattern } from '../utils/glob'
 
 export async function executeTemplateRender(
   operation: TemplateRenderOperation,

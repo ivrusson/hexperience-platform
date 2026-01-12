@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs'
 import { mkdir, rm } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import type { Workspace } from '@hexp/shared'
-import { WorkspaceError } from './errors.js'
+import { WorkspaceError } from './errors'
 
 export class TempWorkspace implements Workspace {
   readonly root: string

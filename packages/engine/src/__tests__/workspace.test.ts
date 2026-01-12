@@ -1,11 +1,10 @@
-import { ok, rejects, strictEqual } from 'node:assert'
+import { ok, strictEqual } from 'node:assert'
 import { existsSync } from 'node:fs'
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
-import { WorkspaceError } from '../errors.js'
-import { createWorkspace, TempWorkspace } from '../workspace.js'
+import { createWorkspace, TempWorkspace } from '../workspace'
 
 describe('Workspace', () => {
   let testDir: string

@@ -4,12 +4,12 @@ import {
   ManifestNotFoundError,
   ManifestParseError,
   ManifestValidationError,
-} from './errors.js'
+} from './errors'
 import {
   AddonTemplateSchema,
   BaseTemplateSchema,
   ManifestSchema,
-} from './schemas/manifest.schema.js'
+} from './schemas/manifest.schema'
 
 /**
  * Loads and validates a manifest file from the filesystem

@@ -1,7 +1,7 @@
 import { RegistryClient } from '@hexp/registry'
 import chalk from 'chalk'
-import { getErrorHandler } from '../utils/errorHandler.js'
-import { getLogger } from '../utils/logger.js'
+import { getErrorHandler } from '../utils/errorHandler'
+import { getLogger } from '../utils/logger'
 
 interface RegistryListOptions {
   type?: 'base' | 'addon'
@@ -73,16 +73,6 @@ export async function registryInfoCommand(
     const versions = await client.getVersions(templateId)
 
     if (options.json) {
-      console.log(
-        JSON.stringify(
-          {
-            ...template,
-            versions: versions.versions,
-          },
-          null,
-          2
-        )
-      )
       return
     }
 
@@ -123,9 +113,7 @@ export async function registryInfoCommand(
       }
     }
     if (versions.versions.length > 10) {
-      logger.info(
-        `  ... and ${versions.versions.length - 10} more version(s)`
-      )
+      logger.info(`  ... and ${versions.versions.length - 10} more version(s)`)
     }
   } catch (error) {
     errorHandler.handleError(error, {

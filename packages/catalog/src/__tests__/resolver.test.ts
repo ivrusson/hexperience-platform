@@ -3,7 +3,7 @@ import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
-import { CatalogResolver } from '../resolver.js'
+import { CatalogResolver } from '../resolver'
 
 describe('CatalogResolver', () => {
   let testDir: string

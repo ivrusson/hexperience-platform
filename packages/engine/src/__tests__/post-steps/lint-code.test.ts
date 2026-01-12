@@ -1,10 +1,9 @@
 import { ok, strictEqual } from 'node:assert'
-import { existsSync } from 'node:fs'
 import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
-import { executeLintCode } from '../../post-steps/lint-code.js'
+import { executeLintCode } from '../../post-steps/lint-code'
 
 describe('Lint Code Post-Step', () => {
   let workspaceDir: string

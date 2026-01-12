@@ -4,7 +4,7 @@ import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
-import { createCommand } from '../../commands/create.js'
+import { createCommand } from '../../commands/create'
 
 describe('E2E: Create project with addons', () => {
   let tempDir: string
@@ -172,10 +172,7 @@ describe('E2E: Create project with addons', () => {
       const packageJson = JSON.parse(
         readFileSync(join(outputDir, 'package.json'), 'utf-8')
       )
-      strictEqual(
-        typeof packageJson.dependencies['@hono/jwt'],
-        'string'
-      )
+      strictEqual(typeof packageJson.dependencies['@hono/jwt'], 'string')
     } finally {
       process.chdir(originalCwd)
       console.log = originalLog
@@ -220,10 +217,7 @@ describe('E2E: Create project with addons', () => {
       const packageJson = JSON.parse(
         readFileSync(join(outputDir, 'package.json'), 'utf-8')
       )
-      strictEqual(
-        typeof packageJson.dependencies['@hono/jwt'],
-        'string'
-      )
+      strictEqual(typeof packageJson.dependencies['@hono/jwt'], 'string')
     } finally {
       process.chdir(originalCwd)
       console.log = originalLog

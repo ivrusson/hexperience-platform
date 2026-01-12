@@ -1,6 +1,6 @@
 import { render } from 'ink'
-import { ModelEditor } from '../tui/components/ModelEditor.js'
-import { MonorepoManager } from '../tui/components/MonorepoManager.js'
+import { ModelEditor } from '../tui/components/ModelEditor'
+import { MonorepoManager } from '../tui/components/MonorepoManager'
 
 interface TuiOptions {
   subcommand?: string

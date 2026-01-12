@@ -5,7 +5,7 @@ import type {
   ExecutionContext,
   OperationResult,
 } from '@hexp/shared'
-import { OperationError } from '../errors.js'
+import { OperationError } from '../errors'
 
 export async function executeEnvAppend(
   operation: EnvAppendOperation,

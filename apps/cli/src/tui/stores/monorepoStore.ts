@@ -77,7 +77,9 @@ class MonorepoStore {
   }
 
   private notify(): void {
-    this.listeners.forEach((listener) => listener())
+    this.listeners.forEach((listener) => {
+      listener()
+    })
   }
 
   // Persistence

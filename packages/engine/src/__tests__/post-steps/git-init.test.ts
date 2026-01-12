@@ -4,7 +4,7 @@ import { mkdir, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
-import { executeGitInit } from '../../post-steps/git-init.js'
+import { executeGitInit } from '../../post-steps/git-init'
 
 describe('Git Init Post-Step', () => {
   let workspaceDir: string

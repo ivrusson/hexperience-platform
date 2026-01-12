@@ -40,17 +40,20 @@ export class FileCollisionDetector {
     base: TemplateWithOps,
     addons: TemplateWithOps[]
   ): CollisionResult {
-    const fileOperations = new Map<string, Array<{ op: Operation; source: string }>>()
+    const fileOperations = new Map<
+      string,
+      Array<{ op: Operation; source: string }>
+    >()
 
     // Collect all file operations from base
     const baseOps = base.ops || []
     for (const op of baseOps) {
-      const files = this.getAffectedFiles(op)
+      const files = FileCollisionDetector.getAffectedFiles(op)
       for (const file of files) {
         if (!fileOperations.has(file)) {
           fileOperations.set(file, [])
         }
-        fileOperations.get(file)!.push({ op, source: base.templateDir })
+        fileOperations.get(file)?.push({ op, source: base.templateDir })
       }
     }
 
@@ -58,12 +61,12 @@ export class FileCollisionDetector {
     for (const addon of addons) {
       const addonOps = addon.ops || []
       for (const op of addonOps) {
-        const files = this.getAffectedFiles(op)
+        const files = FileCollisionDetector.getAffectedFiles(op)
         for (const file of files) {
           if (!fileOperations.has(file)) {
             fileOperations.set(file, [])
           }
-          fileOperations.get(file)!.push({ op, source: addon.templateDir })
+          fileOperations.get(file)?.push({ op, source: addon.templateDir })
         }
       }
     }
@@ -75,15 +78,22 @@ export class FileCollisionDetector {
     for (const [file, ops] of fileOperations) {
       if (ops.length > 1) {
         // Check if collision is allowed
-        const isAllowed = this.isCollisionAllowed(ops.map((o: { op: Operation; source: string }) => o.op))
+        const isAllowed = FileCollisionDetector.isCollisionAllowed(
+          ops.map((o: { op: Operation; source: string }) => o.op)
+        )
 
         if (!isAllowed) {
           collisions.push({
             file,
             operations: ops.map((o: { op: Operation; source: string }) => o.op),
-            sources: ops.map((o: { op: Operation; source: string }) => o.source),
+            sources: ops.map(
+              (o: { op: Operation; source: string }) => o.source
+            ),
           })
-          collisionMap.set(file, ops.map((o: { op: Operation; source: string }) => o.op))
+          collisionMap.set(
+            file,
+            ops.map((o: { op: Operation; source: string }) => o.op)
+          )
         }
       }
     }
@@ -151,7 +161,9 @@ export class FileCollisionDetector {
 
     for (const collision of result.collisions) {
       messages.push(`  File: ${collision.file}`)
-      messages.push(`    Operations: ${collision.operations.map((op) => op.type).join(', ')}`)
+      messages.push(
+        `    Operations: ${collision.operations.map((op) => op.type).join(', ')}`
+      )
       messages.push(`    Sources: ${collision.sources.join(', ')}`)
     }
 

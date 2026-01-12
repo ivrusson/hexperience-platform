@@ -10,7 +10,7 @@ import {
   generateMonorepoTsConfig,
   generatePnpmWorkspace,
   generateTurboJson,
-} from '../../utils/monorepoGenerator.js'
+} from '../../utils/monorepoGenerator'
 
 describe('monorepoGenerator', () => {
   let tempDir: string

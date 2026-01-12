@@ -8,7 +8,7 @@ import {
   generatePackageJsonScripts,
   generateQualityStandards,
   generateReadme,
-} from '../../utils/qualityStandardsGenerator.js'
+} from '../../utils/qualityStandardsGenerator'
 
 describe('qualityStandardsGenerator', () => {
   let tempDir: string

@@ -1,4 +1,3 @@
-import chalk from 'chalk'
 import ora, { type Ora } from 'ora'
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'success'
@@ -15,31 +14,24 @@ export class Logger {
     this.verbose = verbose
   }
 
-  debug(message: string, ...args: unknown[]): void {
+  isVerbose(): boolean {
+    return this.verbose
+  }
+
+  debug(_message: string, ..._args: unknown[]): void {
     if (this.verbose) {
-      console.log(chalk.gray(`[DEBUG] ${message}`), ...args)
     }
   }
 
-  info(message: string, ...args: unknown[]): void {
-    console.log(chalk.blue(`[INFO] ${message}`), ...args)
-  }
+  info(_message: string, ..._args: unknown[]): void {}
 
-  warn(message: string, ...args: unknown[]): void {
-    console.warn(chalk.yellow(`[WARN] ${message}`), ...args)
-  }
+  warn(_message: string, ..._args: unknown[]): void {}
 
-  error(message: string, ...args: unknown[]): void {
-    console.error(chalk.red(`[ERROR] ${message}`), ...args)
-  }
+  error(_message: string, ..._args: unknown[]): void {}
 
-  success(message: string, ...args: unknown[]): void {
-    console.log(chalk.green(`[SUCCESS] ${message}`), ...args)
-  }
+  success(_message: string, ..._args: unknown[]): void {}
 
-  step(message: string): void {
-    console.log(chalk.cyan(`→ ${message}`))
-  }
+  step(_message: string): void {}
 
   /**
    * Start a spinner for long-running operations

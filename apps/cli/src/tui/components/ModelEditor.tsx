@@ -1,8 +1,8 @@
 import { Box, Text } from 'ink'
 import { useEffect, useState } from 'react'
-import { useFocus } from '../hooks/useFocus.js'
-import { useKeyboard } from '../hooks/useKeyboard.js'
-import { type Model, modelStore } from '../stores/modelStore.js'
+import { useFocus } from '../hooks/useFocus'
+import { useKeyboard } from '../hooks/useKeyboard'
+import { type Model, modelStore } from '../stores/modelStore'
 
 export function ModelEditor() {
   const [models, setModels] = useState<Model[]>([])
@@ -18,7 +18,7 @@ export function ModelEditor() {
   }, [])
 
   const modelIds = models.map((m) => m.id)
-  const { focused, focusNext, focusPrevious, setFocus } = useFocus({
+  const { focused, focusNext, focusPrevious } = useFocus({
     items: modelIds,
     onFocusChange: (id) => {
       const model = models.find((m) => m.id === id)

@@ -1,10 +1,7 @@
 import { strictEqual } from 'node:assert'
 import { describe, test } from 'node:test'
 import type { AddonTemplate, BaseTemplate } from '@hexp/catalog'
-import {
-  validateCompatibility,
-  validateProjectName,
-} from '../utils/validators.js'
+import { validateCompatibility, validateProjectName } from '../utils/validators'
 
 describe('validators', () => {
   describe('validateProjectName', () => {

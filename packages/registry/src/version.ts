@@ -1,6 +1,5 @@
-import { satisfies, valid, gte, lte, coerce } from 'semver'
-import type { InvalidVersionError } from './errors.js'
-import { InvalidVersionError as InvalidVersionErrorClass } from './errors.js'
+import { coerce, gte, lte, satisfies, valid } from 'semver'
+import { InvalidVersionError as InvalidVersionErrorClass } from './errors'
 
 /**
  * Parse and validate a semantic version string
@@ -22,7 +21,12 @@ export function parseVersion(version: string): string {
   }
 
   // Check if it's a range (^, ~, >=, <=)
-  if (version.startsWith('^') || version.startsWith('~') || version.startsWith('>=') || version.startsWith('<=')) {
+  if (
+    version.startsWith('^') ||
+    version.startsWith('~') ||
+    version.startsWith('>=') ||
+    version.startsWith('<=')
+  ) {
     return version
   }
 
@@ -53,11 +57,13 @@ export function findBestVersion(
 ): string | null {
   if (range === 'latest' || range === '*' || range === '') {
     // Return the highest version
-    return versions.sort((a, b) => {
-      if (gte(a, b)) return -1
-      if (lte(a, b)) return 1
-      return 0
-    })[0] || null
+    return (
+      versions.sort((a, b) => {
+        if (gte(a, b)) return -1
+        if (lte(a, b)) return 1
+        return 0
+      })[0] || null
+    )
   }
 
   // Filter versions that satisfy the range

@@ -1,7 +1,7 @@
-import { Hono } from 'hono'
 import { sign } from '@hono/jwt'
-import { loginSchema, registerSchema } from './types.js'
-import { hashPassword, verifyPassword } from './utils.js'
+import { Hono } from 'hono'
+import { loginSchema, registerSchema } from './types'
+import { hashPassword, verifyPassword } from './utils'
 
 export const authRoutes = new Hono()
 
@@ -42,7 +42,8 @@ authRoutes.post('/register', async (c) => {
     users.push(user)
 
     // Generate JWT token
-    const secret = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
+    const secret =
+      process.env.JWT_SECRET || 'your-secret-key-change-in-production'
     const token = await sign(
       {
         id: user.id,
@@ -94,7 +95,8 @@ authRoutes.post('/login', async (c) => {
     }
 
     // Generate JWT token
-    const secret = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
+    const secret =
+      process.env.JWT_SECRET || 'your-secret-key-change-in-production'
     const token = await sign(
       {
         id: user.id,

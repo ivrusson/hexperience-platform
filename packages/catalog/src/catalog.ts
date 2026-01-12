@@ -1,6 +1,6 @@
 import { resolve } from 'node:path'
 import type { AddonTemplate, BaseTemplate } from '@hexp/shared'
-import { CatalogResolver, type CatalogResult } from './resolver.js'
+import { CatalogResolver, type CatalogResult } from './resolver'
 
 /**
  * Main catalog class for discovering and querying templates

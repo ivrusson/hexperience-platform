@@ -1,6 +1,6 @@
 import { strictEqual } from 'node:assert'
 import { describe, test } from 'node:test'
-import { modelStore } from '../../../tui/stores/modelStore.js'
+import { modelStore } from '../../../tui/stores/modelStore'
 
 describe('modelStore', () => {
   test('should add a model', () => {

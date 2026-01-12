@@ -14,10 +14,26 @@
         "noUnusedImports": "error"
       },
       "suspicious": {
-        "noConsole": "warn"
+        "noConsole": {
+          "level": "warn",
+          "fix": "safe"
+        }
       }
     }
   },
+  "overrides": [
+    {
+      "includes": ["**/*.test.ts", "**/__tests__/**/*.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off",
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    }
+  ],
   "formatter": {
     "enabled": true,
     "lineWidth": 80,
@@ -48,13 +64,15 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "experimentalScannerIgnores": [
-      "node_modules",
-      "dist",
-      "build",
-      ".turbo",
-      "coverage",
-      "*.tsbuildinfo"
+    "includes": [
+      "**",
+      "!!**/node_modules",
+      "!!**/dist",
+      "!!**/build",
+      "!!**/.turbo",
+      "!!**/coverage",
+      "!!**/*.tsbuildinfo",
+      "!!**/templates/**/biome.json"
     ]
   }
 }

@@ -1,6 +1,6 @@
 import { strictEqual } from 'node:assert'
 import { describe, test } from 'node:test'
-import { monorepoStore } from '../../../tui/stores/monorepoStore.js'
+import { monorepoStore } from '../../../tui/stores/monorepoStore'
 
 describe('monorepoStore', () => {
   test('should add a package', () => {

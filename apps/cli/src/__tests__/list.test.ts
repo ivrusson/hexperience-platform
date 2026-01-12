@@ -3,7 +3,7 @@ import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
-import { listCommand } from '../commands/list.js'
+import { listCommand } from '../commands/list'
 
 describe('listCommand', () => {
   let tempDir: string

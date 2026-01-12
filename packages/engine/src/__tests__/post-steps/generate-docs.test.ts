@@ -4,7 +4,7 @@ import { mkdir, readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
-import { executeGenerateDocs } from '../../post-steps/generate-docs.js'
+import { executeGenerateDocs } from '../../post-steps/generate-docs'
 
 describe('Generate Docs Post-Step', () => {
   let workspaceDir: string

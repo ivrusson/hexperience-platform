@@ -6,7 +6,7 @@ import type {
   OperationResult,
 } from '@hexp/shared'
 import { Project } from 'ts-morph'
-import { OperationError } from '../errors.js'
+import { OperationError } from '../errors'
 
 export async function executeCodemod(
   operation: CodemodOperation,

@@ -1,7 +1,7 @@
 import { readdir, stat } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import type { AddonTemplate, BaseTemplate } from '@hexp/shared'
-import { ManifestLoader } from './loader.js'
+import { ManifestLoader } from './loader'
 
 /**
  * Result of scanning templates

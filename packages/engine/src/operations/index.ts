@@ -1,11 +1,11 @@
 import type { ExecutionContext, Operation, OperationResult } from '@hexp/shared'
-import { executeCodemod } from './codemod.js'
-import { executeCopy } from './copy.js'
-import { executeEnvAppend } from './env-append.js'
-import { executeJsonMerge } from './json-merge.js'
-import { executeTemplateRender } from './template-render.js'
-import { executeTextInsert } from './text-insert.js'
-import { executeTextReplace } from './text-replace.js'
+import { executeCodemod } from './codemod'
+import { executeCopy } from './copy'
+import { executeEnvAppend } from './env-append'
+import { executeJsonMerge } from './json-merge'
+import { executeTemplateRender } from './template-render'
+import { executeTextInsert } from './text-insert'
+import { executeTextReplace } from './text-replace'
 
 export async function executeOperation(
   operation: Operation,

@@ -55,7 +55,7 @@ export class CompatibilityChecker {
 
         // Check if any previously processed addon provides it
         let found = false
-        for (const [otherAddonId, provided] of addonCapabilities) {
+        for (const [, provided] of addonCapabilities) {
           if (provided.has(req)) {
             found = true
             break
@@ -88,7 +88,10 @@ export class CompatibilityChecker {
   /**
    * Get error message for compatibility issues
    */
-  static getErrorMessage(result: CompatibilityResult, base: BaseTemplate): string {
+  static getErrorMessage(
+    result: CompatibilityResult,
+    base: BaseTemplate
+  ): string {
     if (result.isCompatible) {
       return ''
     }

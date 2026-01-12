@@ -1,6 +1,5 @@
-import { Context, Next } from 'hono'
 import { jwt } from '@hono/jwt'
-import type { AuthContext } from './types.js'
+import type { Context, Next } from 'hono'
 
 /**
  * JWT authentication middleware

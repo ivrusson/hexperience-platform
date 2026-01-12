@@ -14,7 +14,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "rslib build && cp dist/src/index.d.ts dist/index.d.ts 2>/dev/null || true && node -e \"const fs=require('fs'); const content=fs.readFileSync('dist/index.d.ts','utf8'); fs.writeFileSync('dist/index.d.ts',content.replace(/from ['\\\"]\\.\\//g,'from \\\"\\./src/'))\"",
+    "build": "rslib build && cp dist/src/index.d.ts dist/index.d.ts 2>/dev/null || true && node -e \"const fs=require('fs'); const content=fs.readFileSync('dist/index.d.ts','utf8'); fs.writeFileSync('dist/index.d.ts',content.replace(/(from ['\\\"])(\\.\\/[^'\\\"]+)(['\\\"])/g,(m,prefix,path,suffix)=>prefix+(path.startsWith('./src/')?path:'./src'+path.substring(1))+suffix))\"",
     "dev": "rslib build --watch",
     "lint": "biome check .",
     "format": "biome format --write .",

@@ -89,7 +89,7 @@ export async function executeInstallDependencies(
           : 'npm install'
 
     try {
-      const { stdout, stderr } = await execAsync(installCommand, {
+      await execAsync(installCommand, {
         cwd: workspaceRoot,
         maxBuffer: 10 * 1024 * 1024, // 10MB
       })

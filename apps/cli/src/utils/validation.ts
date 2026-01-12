@@ -1,4 +1,5 @@
 import type { AddonTemplate, BaseTemplate } from '@hexp/catalog'
+import type { Operation } from '@hexp/shared'
 import {
   CompatibilityChecker,
   ConflictDetector,
@@ -6,7 +7,6 @@ import {
   FileCollisionDetector,
   type TemplateWithOps,
 } from '@hexp/validation'
-import type { Operation } from '@hexp/shared'
 
 /**
  * Consolidated validation result
@@ -87,7 +87,10 @@ export function validateGenerationPlan(
     ops,
   }))
 
-  const collisionResult = FileCollisionDetector.check(baseWithOps, addonsWithOps)
+  const collisionResult = FileCollisionDetector.check(
+    baseWithOps,
+    addonsWithOps
+  )
   if (collisionResult.hasCollisions) {
     errors.push(FileCollisionDetector.getErrorMessage(collisionResult))
   }

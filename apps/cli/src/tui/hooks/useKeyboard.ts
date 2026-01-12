@@ -20,18 +20,7 @@ export interface UseKeyboardOptions {
 }
 
 export function useKeyboard(options: UseKeyboardOptions = {}): void {
-  const {
-    onKeyPress,
-    onEscape,
-    onEnter,
-    onArrowUp,
-    onArrowDown,
-    onArrowLeft,
-    onArrowRight,
-    onTab,
-    onCtrlS,
-    enabled = true,
-  } = options
+  const { enabled = true } = options
 
   const handlersRef = useRef(options)
   useEffect(() => {

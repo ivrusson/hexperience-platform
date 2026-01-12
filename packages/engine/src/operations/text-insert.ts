@@ -6,7 +6,7 @@ import type {
   OperationResult,
   TextInsertOperation,
 } from '@hexp/shared'
-import { OperationError } from '../errors.js'
+import { OperationError } from '../errors'
 
 export async function executeTextInsert(
   operation: TextInsertOperation,

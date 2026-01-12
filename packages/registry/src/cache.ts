@@ -1,13 +1,12 @@
-import type { TemplateVersionDetail } from './types.js'
 import {
   clearCache as clearStorageCache,
-  getCacheMetadata,
   getCachedTemplatePath,
+  getCacheMetadata,
   isCached,
   listCachedTemplates,
   storeTemplate,
   validateCacheIntegrity,
-} from './storage.js'
+} from './storage'
 
 /**
  * Cache manager for templates
@@ -56,7 +55,13 @@ export class TemplateCache {
   getMetadata(
     templateId: string,
     version: string
-  ): { templateId: string; version: string; cachedAt: string; checksum?: string; size: number } | null {
+  ): {
+    templateId: string
+    version: string
+    cachedAt: string
+    checksum?: string
+    size: number
+  } | null {
     return getCacheMetadata(templateId, version)
   }
 
@@ -64,7 +69,12 @@ export class TemplateCache {
    * List all cached templates
    */
   async list(): Promise<
-    Array<{ templateId: string; version: string; cachedAt: string; size: number }>
+    Array<{
+      templateId: string
+      version: string
+      cachedAt: string
+      size: number
+    }>
   > {
     return listCachedTemplates()
   }

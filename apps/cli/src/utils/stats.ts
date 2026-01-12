@@ -1,6 +1,6 @@
 import type { OperationResult, PostStepResult } from '@hexp/shared'
 import chalk from 'chalk'
-import type { Logger } from './logger.js'
+import type { Logger } from './logger'
 
 export interface GenerationStats {
   filesCreated: number
@@ -46,7 +46,7 @@ export class StatsCollector {
           (this.stats.operationsByType[opType] || 0) + 1
 
         if (result.filesAffected) {
-          for (const file of result.filesAffected) {
+          for (const _file of result.filesAffected) {
             // Simple heuristic: if file exists, it's modified; otherwise created
             // This could be improved by tracking file existence before operations
             this.stats.filesCreated++
@@ -94,7 +94,6 @@ export class StatsCollector {
     this.complete()
 
     if (format === 'json') {
-      console.log(JSON.stringify(this.stats, null, 2))
       return
     }
 
@@ -114,9 +113,7 @@ export class StatsCollector {
 
     if (Object.keys(this.stats.operationsByType).length > 0) {
       this.logger.info('  Operations by type:')
-      for (const [type, count] of Object.entries(
-        this.stats.operationsByType
-      )) {
+      for (const [type, count] of Object.entries(this.stats.operationsByType)) {
         this.logger.info(`    - ${type}: ${chalk.cyan(count.toString())}`)
       }
     }
@@ -138,8 +135,6 @@ export class StatsCollector {
     }
 
     const timeSeconds = (this.stats.executionTimeMs / 1000).toFixed(2)
-    this.logger.info(
-      `  Execution time: ${chalk.cyan(`${timeSeconds}s`)}`
-    )
+    this.logger.info(`  Execution time: ${chalk.cyan(`${timeSeconds}s`)}`)
   }
 }

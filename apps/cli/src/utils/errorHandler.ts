@@ -1,13 +1,13 @@
 import chalk from 'chalk'
-import type { CLIError } from './errors.js'
+import type { CLIError } from './errors'
 import {
   ConfigError,
   OperationError,
   SystemError,
   TemplateError,
   ValidationError,
-} from './errors.js'
-import { getLogger } from './logger.js'
+} from './errors'
+import { getLogger } from './logger'
 
 export enum ExitCode {
   SUCCESS = 0,
@@ -42,13 +42,17 @@ export class ErrorHandler {
     }
 
     // Log stack trace in verbose mode
-    if (this.logger['verbose'] && cliError instanceof Error && cliError.stack) {
+    if (
+      this.logger.isVerbose() &&
+      cliError instanceof Error &&
+      cliError.stack
+    ) {
       this.logger.debug('\nStack trace:')
       this.logger.debug(cliError.stack)
     }
 
     // Log context in verbose mode
-    if (this.logger['verbose'] && context) {
+    if (this.logger.isVerbose() && context) {
       this.logger.debug('\nContext:')
       this.logger.debug(JSON.stringify(context, null, 2))
     }

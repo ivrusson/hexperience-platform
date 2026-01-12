@@ -1,7 +1,7 @@
 import { RegistryClient } from '@hexp/registry'
 import chalk from 'chalk'
-import { getErrorHandler } from '../utils/errorHandler.js'
-import { getLogger } from '../utils/logger.js'
+import { getErrorHandler } from '../utils/errorHandler'
+import { getLogger } from '../utils/logger'
 
 export async function cacheListCommand(): Promise<void> {
   const logger = getLogger()

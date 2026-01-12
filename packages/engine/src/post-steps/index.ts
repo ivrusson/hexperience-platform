@@ -1,10 +1,10 @@
 import type { PostStep, PostStepResult, PostStepType } from '@hexp/shared'
-import { executeFormatCode } from './format-code.js'
-import { executeGenerateDocs } from './generate-docs.js'
-import { executeGitInit } from './git-init.js'
-import { executeInstallDependencies } from './install-dependencies.js'
-import { executeLintCode } from './lint-code.js'
-import { executeTypeCheck } from './type-check.js'
+import { executeFormatCode } from './format-code'
+import { executeGenerateDocs } from './generate-docs'
+import { executeGitInit } from './git-init'
+import { executeInstallDependencies } from './install-dependencies'
+import { executeLintCode } from './lint-code'
+import { executeTypeCheck } from './type-check'
 
 export async function executePostStep(
   step: PostStep,

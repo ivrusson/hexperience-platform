@@ -1,20 +1,20 @@
 import { request } from 'undici'
-import { TemplateCache } from './cache.js'
+import { TemplateCache } from './cache'
 import {
   NetworkError,
   RateLimitError,
   RegistryError,
   TemplateNotFoundError,
   VersionNotFoundError,
-} from './errors.js'
+} from './errors'
 import type {
   ListTemplatesResponse,
   ListVersionsResponse,
   RegistryClientOptions,
   TemplateMetadata,
   TemplateVersionDetail,
-} from './types.js'
-import { findBestVersion } from './version.js'
+} from './types'
+import { findBestVersion } from './version'
 
 /**
  * Registry API client

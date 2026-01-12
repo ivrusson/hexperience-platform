@@ -8,14 +8,14 @@ export type {
   Operation,
   Prompt,
 } from '@hexp/shared'
-export { Catalog } from './catalog.js'
+export { Catalog } from './catalog'
 // Errors
 export {
   ManifestNotFoundError,
   ManifestParseError,
   ManifestValidationError,
-} from './errors.js'
+} from './errors'
 // Internal utilities (exported for testing)
-export { ManifestLoader } from './loader.js'
-export type { CatalogResult } from './resolver.js'
-export { CatalogResolver } from './resolver.js'
+export { ManifestLoader } from './loader'
+export type { CatalogResult } from './resolver'
+export { CatalogResolver } from './resolver'

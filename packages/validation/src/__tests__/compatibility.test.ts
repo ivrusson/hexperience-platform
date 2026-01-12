@@ -1,7 +1,7 @@
 import { ok, strictEqual } from 'node:assert'
 import { describe, test } from 'node:test'
 import type { AddonTemplate, BaseTemplate } from '@hexp/catalog'
-import { CompatibilityChecker } from '../compatibility.js'
+import { CompatibilityChecker } from '../compatibility'
 
 describe('CompatibilityChecker', () => {
   test('should return compatible when base provides all required capabilities', () => {
@@ -62,7 +62,10 @@ describe('CompatibilityChecker', () => {
     strictEqual(result.isCompatible, false)
     strictEqual(result.missingCapabilities.size, 1)
     ok(result.missingCapabilities.has('addon-1'))
-    strictEqual(result.missingCapabilities.get('addon-1')?.includes('orm'), true)
+    strictEqual(
+      result.missingCapabilities.get('addon-1')?.includes('orm'),
+      true
+    )
     strictEqual(result.compatibilityMatrix.get('addon-1'), false)
   })
 

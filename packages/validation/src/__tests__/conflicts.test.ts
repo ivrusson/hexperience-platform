@@ -1,7 +1,7 @@
-import { strictEqual, ok } from 'node:assert'
+import { ok, strictEqual } from 'node:assert'
 import { describe, test } from 'node:test'
 import type { AddonTemplate } from '@hexp/catalog'
-import { ConflictDetector } from '../conflicts.js'
+import { ConflictDetector } from '../conflicts'
 
 describe('ConflictDetector', () => {
   test('should return no conflicts when addons are compatible', () => {

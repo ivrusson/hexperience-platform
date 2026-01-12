@@ -5,8 +5,8 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
 import type { ExecutionContext, JsonMergeOperation } from '@hexp/shared'
-import { JsonMergeError, OperationError } from '../../errors.js'
-import { executeJsonMerge } from '../../operations/json-merge.js'
+import { JsonMergeError } from '../../errors'
+import { executeJsonMerge } from '../../operations/json-merge'
 
 describe('JSON Merge Operation', () => {
   let workspaceDir: string

@@ -7,8 +7,8 @@ import {
   ManifestNotFoundError,
   ManifestParseError,
   ManifestValidationError,
-} from '../errors.js'
-import { ManifestLoader } from '../loader.js'
+} from '../errors'
+import { ManifestLoader } from '../loader'
 
 describe('ManifestLoader', () => {
   let testDir: string

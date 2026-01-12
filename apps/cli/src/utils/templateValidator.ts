@@ -1,11 +1,9 @@
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import type { AddonTemplate, BaseTemplate, Operation } from '@hexp/catalog'
 import { Catalog } from '@hexp/catalog'
 import type { Prompt } from '@hexp/shared'
 import { z } from 'zod'
-import type { TemplateError } from './errors.js'
-import { TemplateError as TemplateErrorClass } from './errors.js'
 
 export interface ValidationIssue {
   level: 'error' | 'warning'
@@ -107,7 +105,7 @@ export class TemplateValidator {
   /**
    * Validate all templates in the project
    */
-  async validateAll(templatesPath?: string): Promise<ValidationResult> {
+  async validateAll(_templatesPath?: string): Promise<ValidationResult> {
     const issues: ValidationIssue[] = []
     let templatesValidated = 0
 
@@ -393,7 +391,7 @@ export class TemplateValidator {
     }
 
     // Check for circular dependencies in addons
-    const addonMap = new Map(addons.map((a) => [a.id, a]))
+    const _addonMap = new Map(addons.map((a) => [a.id, a]))
     for (const addon of addons) {
       if (addon.requires) {
         for (const req of addon.requires) {

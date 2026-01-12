@@ -1,10 +1,9 @@
 import { ok, strictEqual } from 'node:assert'
-import { existsSync } from 'node:fs'
 import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
-import { executeInstallDependencies } from '../../post-steps/install-dependencies.js'
+import { executeInstallDependencies } from '../../post-steps/install-dependencies'
 
 describe('Install Dependencies Post-Step', () => {
   let workspaceDir: string

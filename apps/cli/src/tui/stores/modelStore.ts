@@ -61,7 +61,9 @@ class ModelStore {
   }
 
   private notify(): void {
-    this.listeners.forEach((listener) => listener())
+    this.listeners.forEach((listener) => {
+      listener()
+    })
   }
 
   // Persistence (optional - can be implemented later)

@@ -1,12 +1,11 @@
-import { ok, rejects, strictEqual } from 'node:assert'
+import { ok, strictEqual } from 'node:assert'
 import { existsSync } from 'node:fs'
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
 import type { EnvAppendOperation, ExecutionContext } from '@hexp/shared'
-import { OperationError } from '../../errors.js'
-import { executeEnvAppend } from '../../operations/env-append.js'
+import { executeEnvAppend } from '../../operations/env-append'
 
 describe('Env Append Operation', () => {
   let workspaceDir: string

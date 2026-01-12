@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname } from 'node:path'
 import mustache from 'mustache'
-import { TemplateRenderError } from '../errors.js'
+import { TemplateRenderError } from '../errors'
 
 export async function renderTemplate(
   sourcePath: string,

@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, mock, test } from 'node:test'
 import * as clackPrompts from '@clack/prompts'
-import { createCommand } from '../../commands/create.js'
+import { createCommand } from '../../commands/create'
 
 describe('E2E: Interactive flow', () => {
   let tempDir: string

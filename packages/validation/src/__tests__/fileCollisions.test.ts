@@ -1,7 +1,6 @@
-import { strictEqual, ok } from 'node:assert'
+import { ok, strictEqual } from 'node:assert'
 import { describe, test } from 'node:test'
-import type { Operation } from '@hexp/shared'
-import { FileCollisionDetector, type TemplateWithOps } from '../fileCollisions.js'
+import { FileCollisionDetector, type TemplateWithOps } from '../fileCollisions'
 
 describe('FileCollisionDetector', () => {
   test('should return no collisions when files are unique', () => {

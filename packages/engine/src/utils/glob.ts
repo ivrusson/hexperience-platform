@@ -1,4 +1,4 @@
-import { readdir, stat } from 'node:fs/promises'
+import { readdir } from 'node:fs/promises'
 import { join, relative, resolve } from 'node:path'
 import fg from 'fast-glob'
 
@@ -45,7 +45,7 @@ export async function getAllFiles(
   baseDir?: string
 ): Promise<string[]> {
   const resolvedDir = resolve(dir)
-  const resolvedBase = baseDir ? resolve(baseDir) : resolvedDir
+  const _resolvedBase = baseDir ? resolve(baseDir) : resolvedDir
   const files: string[] = []
 
   async function traverse(currentDir: string): Promise<void> {
@@ -61,7 +61,7 @@ export async function getAllFiles(
           files.push(fullPath)
         }
       }
-    } catch (error) {
+    } catch (_error) {
       // Ignore errors (e.g., permission denied)
     }
   }

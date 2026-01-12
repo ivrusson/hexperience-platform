@@ -1,13 +1,13 @@
 import { strictEqual } from 'node:assert'
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
-import { mkdir, rm, writeFile } from 'node:fs/promises'
+import { mkdir, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, relative } from 'node:path'
 import { describe, test } from 'node:test'
-import { createCommand } from '../../apps/cli/src/commands/create.js'
+import { createCommand } from '../../apps/cli/src/commands/create'
 
 // Helper to get directory structure recursively
-function getDirectoryStructure(
+function _getDirectoryStructure(
   dir: string,
   baseDir: string = dir
 ): Record<string, string | Record<string, unknown>> {
@@ -30,7 +30,7 @@ function getDirectoryStructure(
     }
 
     if (entry.isDirectory()) {
-      structure[relPath] = getDirectoryStructure(fullPath, baseDir)
+      structure[relPath] = _getDirectoryStructure(fullPath, baseDir)
     } else {
       // For files, store a hash or size indicator
       const stats = statSync(fullPath)
@@ -112,8 +112,7 @@ describe('Template Snapshot Tests', () => {
       strictEqual(existsSync(join(testOutputDir, 'tsconfig.json')), true)
       strictEqual(existsSync(join(testOutputDir, 'src', 'index.ts')), true)
 
-      // Get structure
-      const structure = getDirectoryStructure(testOutputDir)
+      // Get key files
       const keyFiles = getKeyFilesContent(testOutputDir)
 
       // Verify key files exist
@@ -220,10 +219,7 @@ describe('Template Snapshot Tests', () => {
 
       // Verify package.json has Hono and Drizzle dependencies
       const packageJson = JSON.parse(keyFiles['package.json'])
-      strictEqual(
-        typeof packageJson.dependencies,
-        'object'
-      )
+      strictEqual(typeof packageJson.dependencies, 'object')
       // Should have hono and drizzle dependencies
       const deps = packageJson.dependencies || {}
       const hasHono = Object.keys(deps).some((k) => k.includes('hono'))

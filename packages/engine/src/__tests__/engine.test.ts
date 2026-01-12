@@ -11,9 +11,9 @@ import type {
   TemplateRenderOperation,
   TextInsertOperation,
 } from '@hexp/shared'
-import { createEngine, Engine } from '../engine.js'
-import { OperationError } from '../errors.js'
-import { createWorkspace } from '../workspace.js'
+import { createEngine, Engine } from '../engine'
+import { OperationError } from '../errors'
+import { createWorkspace } from '../workspace'
 
 describe('Engine', () => {
   let templateDir: string

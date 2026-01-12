@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander'
-import { createCommand } from './commands/create.js'
-import { listCommand } from './commands/list.js'
-import { tuiCommand } from './commands/tui.jsx'
-import { validateCommand } from './commands/validate.js'
+import { cacheClearCommand, cacheListCommand } from './commands/cache'
+import { createCommand } from './commands/create'
+import { listCommand } from './commands/list'
 import {
   registryInfoCommand,
   registryListCommand,
   registrySearchCommand,
-} from './commands/registry.js'
-import { cacheClearCommand, cacheListCommand } from './commands/cache.js'
-import { getLogger } from './utils/logger.js'
+} from './commands/registry'
+import { tuiCommand } from './commands/tui'
+import { validateCommand } from './commands/validate'
+import { getLogger } from './utils/logger'
 
 const program = new Command()
 

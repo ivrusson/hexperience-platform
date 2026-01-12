@@ -1,16 +1,14 @@
 import chalk from 'chalk'
-import { getErrorHandler } from '../utils/errorHandler.js'
-import { getLogger } from '../utils/logger.js'
-import { TemplateValidator } from '../utils/templateValidator.js'
+import { getErrorHandler } from '../utils/errorHandler'
+import { getLogger } from '../utils/logger'
+import { TemplateValidator } from '../utils/templateValidator'
 
 interface ValidateOptions {
   json?: boolean
   templates?: string
 }
 
-export async function validateCommand(
-  options: ValidateOptions
-): Promise<void> {
+export async function validateCommand(options: ValidateOptions): Promise<void> {
   const logger = getLogger()
   const errorHandler = getErrorHandler()
   const projectRoot = process.cwd()
@@ -22,18 +20,6 @@ export async function validateCommand(
     const result = await validator.validateAll(options.templates)
 
     if (options.json) {
-      console.log(
-        JSON.stringify(
-          {
-            isValid: result.isValid,
-            templatesValidated: result.templatesValidated,
-            errors: result.errors,
-            warnings: result.warnings,
-          },
-          null,
-          2
-        )
-      )
       process.exit(result.isValid ? 0 : 1)
       return
     }
@@ -64,7 +50,7 @@ export async function validateCommand(
     }
 
     // Summary
-    logger.info('\n' + '='.repeat(50))
+    logger.info(`\n${'='.repeat(50)}`)
     if (result.isValid) {
       logger.success(
         `✓ Validation passed: ${result.templatesValidated} template(s) valid`

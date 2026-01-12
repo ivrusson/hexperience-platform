@@ -15,7 +15,7 @@
       "type": "textInsert",
       "target": "src/index.ts",
       "marker": "// @addon:imports",
-      "content": "import { authMiddleware } from './auth/middleware.js'\nimport { authRoutes } from './auth/routes.js'\n",
+      "content": "import { authMiddleware } from './auth/middleware'\nimport { authRoutes } from './auth/routes'\n",
       "position": "after"
     },
     {

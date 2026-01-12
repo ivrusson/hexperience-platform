@@ -4,25 +4,25 @@ import { confirm as confirmPrompt, intro, outro, spinner } from '@clack/prompts'
 import type { AddonTemplate, BaseTemplate } from '@hexp/catalog'
 import { Catalog } from '@hexp/catalog'
 import { createEngine, createWorkspace } from '@hexp/engine'
-import type { PostStep, PostStepResult } from '@hexp/shared'
 import { RegistryClient } from '@hexp/registry'
+import type { PostStep } from '@hexp/shared'
 import chalk from 'chalk'
-import { collectVars } from '../prompts/collectVars.js'
-import { selectAddons } from '../prompts/selectAddons.js'
-import { selectBase } from '../prompts/selectBase.js'
+import { collectVars } from '../prompts/collectVars'
+import { selectAddons } from '../prompts/selectAddons'
+import { selectBase } from '../prompts/selectBase'
 import {
   type CreateOptions,
   loadConfig,
   mergeConfig,
-} from '../utils/configLoader.js'
-import { getErrorHandler } from '../utils/errorHandler.js'
-import { getLogger } from '../utils/logger.js'
-import { generateMonorepoFiles } from '../utils/monorepoGenerator.js'
-import { generateQualityStandards } from '../utils/qualityStandardsGenerator.js'
-import { StatsCollector } from '../utils/stats.js'
-import { findTemplatePath } from '../utils/templatePath.js'
-import { validateGenerationPlan } from '../utils/validation.js'
-import { validateProjectName } from '../utils/validators.js'
+} from '../utils/configLoader'
+import { getErrorHandler } from '../utils/errorHandler'
+import { getLogger } from '../utils/logger'
+import { generateMonorepoFiles } from '../utils/monorepoGenerator'
+import { generateQualityStandards } from '../utils/qualityStandardsGenerator'
+import { StatsCollector } from '../utils/stats'
+import { findTemplatePath } from '../utils/templatePath'
+import { validateGenerationPlan } from '../utils/validation'
+import { validateProjectName } from '../utils/validators'
 
 export async function createCommand(options: CreateOptions): Promise<void> {
   const isDryRun = options.dryRun || options.preview
@@ -108,7 +108,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     }
 
     // Load config file if provided
-    let configFile
+    let configFile: CreateOptions | undefined
     if (options.config) {
       try {
         configFile = loadConfig(options.config)
@@ -236,7 +236,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       }
 
       // Parse template@version syntax
-      const baseId = mergedOptions.base!
+      const baseId = mergedOptions.base
       const [baseTemplateId, baseVersion] = baseId.includes('@')
         ? baseId.split('@')
         : [baseId, undefined]
@@ -251,7 +251,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
         )
         try {
           const registryClient = new RegistryClient()
-          const { path: cachedPath } = await registryClient.downloadTemplateCached(
+          await registryClient.downloadTemplateCached(
             baseTemplateId,
             baseVersion
           )
@@ -395,7 +395,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       selectedBase,
       selectedAddons,
       selectedBase.ops || [],
-      addonTemplatePaths.map(({ template, path }) => ({
+      addonTemplatePaths.map(({ template }) => ({
         addon: template,
         ops: template.ops || [],
       }))
@@ -554,7 +554,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       if (postSteps.length > 0 && statsCollector) {
         // Note: post-steps are executed inside engine.compose, but we need to track them
         // For now, we'll track them separately if needed
-        const postStepTypes = postSteps.map((s) => s.type)
+        const _postStepTypes = postSteps.map((s) => s.type)
         // We would need to get post-step results from engine, but for now we'll estimate
         // This could be improved by returning post-step results from engine.compose
       }

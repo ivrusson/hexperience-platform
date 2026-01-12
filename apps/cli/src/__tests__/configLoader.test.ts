@@ -3,7 +3,7 @@ import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
-import { loadConfig, mergeConfig } from '../utils/configLoader.js'
+import { loadConfig, mergeConfig } from '../utils/configLoader'
 
 describe('configLoader', () => {
   let tempDir: string

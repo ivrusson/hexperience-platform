@@ -5,8 +5,8 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, test } from 'node:test'
 import type { CopyOperation, ExecutionContext } from '@hexp/shared'
-import { OperationError } from '../../errors.js'
-import { executeCopy } from '../../operations/copy.js'
+import { OperationError } from '../../errors'
+import { executeCopy } from '../../operations/copy'
 
 describe('Copy Operation', () => {
   let templateDir: string

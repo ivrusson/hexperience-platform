@@ -7,7 +7,7 @@ import type {
   OperationResult,
 } from '@hexp/shared'
 import deepmerge from 'deepmerge'
-import { JsonMergeError, OperationError } from '../errors.js'
+import { JsonMergeError, OperationError } from '../errors'
 
 export async function executeJsonMerge(
   operation: JsonMergeOperation,

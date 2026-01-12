@@ -6,7 +6,7 @@ import type {
   OperationResult,
   TextReplaceOperation,
 } from '@hexp/shared'
-import { OperationError } from '../errors.js'
+import { OperationError } from '../errors'
 
 export async function executeTextReplace(
   operation: TextReplaceOperation,

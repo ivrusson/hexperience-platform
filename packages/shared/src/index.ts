@@ -1,3 +1,3 @@
-export * from './operations.js'
-export * from './types.js'
-export * from './workspace.js'
+export * from './operations'
+export * from './types'
+export * from './workspace'

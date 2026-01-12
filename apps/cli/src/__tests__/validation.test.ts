@@ -5,7 +5,7 @@ import { join } from 'node:path'
 import { describe, test } from 'node:test'
 import type { AddonTemplate, BaseTemplate } from '@hexp/catalog'
 import { Catalog } from '@hexp/catalog'
-import { validateGenerationPlan } from '../utils/validation.js'
+import { validateGenerationPlan } from '../utils/validation'
 
 describe('validation integration', () => {
   let tempDir: string

@@ -2,8 +2,6 @@
  * Base types for Hexperience Platform templates
  */
 
-import type { Operation } from './operations.js'
-
 /**
  * Type of template
  */

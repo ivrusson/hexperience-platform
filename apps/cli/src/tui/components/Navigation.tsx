@@ -1,6 +1,6 @@
 import { Box, Text } from 'ink'
-import { useFocus } from '../hooks/useFocus.js'
-import { useKeyboard } from '../hooks/useKeyboard.js'
+import { useFocus } from '../hooks/useFocus'
+import { useKeyboard } from '../hooks/useKeyboard'
 
 export interface NavigationItem {
   id: string
