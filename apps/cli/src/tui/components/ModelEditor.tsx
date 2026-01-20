@@ -326,13 +326,11 @@ export function ModelEditor({ projectPath }: ModelEditorProps = {}) {
         const model = models.find((m) => m.id === focused)
         if (model) {
           setSelectedModel(model)
-          setStep('view-details')
+          setIsEditMode(true)
+          setModelName(model.name)
+          setFields([...model.fields])
+          setStep('review-model')
         }
-      } else if (step === 'view-details' && selectedModel) {
-        setIsEditMode(true)
-        setModelName(selectedModel.name)
-        setFields([...selectedModel.fields])
-        setStep('review-model')
       } else if (step === 'select-field-type' && focusedType) {
         setCurrentField((prev) => ({ ...prev, type: focusedType }))
         handleFieldTypeSelected()
