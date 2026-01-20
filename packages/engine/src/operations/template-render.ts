@@ -44,21 +44,25 @@ export async function executeTemplateRender(
         }
 
         // Determine destination path
-        // If 'to' is a directory (ends with / or .), append the relative path
+        // If 'to' is a directory (ends with / or .), or if we have multiple source files,
+        // treat it as a directory and append the relative path
         // Otherwise, use 'to' as the destination file
         let destPath: string
-        if (operation.to === '.' || operation.to.endsWith('/')) {
+        const isMultipleFiles = sourceFiles.length > 1
+        if (
+          operation.to === '.' ||
+          operation.to.endsWith('/') ||
+          isMultipleFiles
+        ) {
           // Destination is a directory, preserve structure (but without template/ prefix)
-          destPath = join(context.workspaceRoot, operation.to, relativePath)
-        } else {
-          // Single file destination (use first file only, or error if multiple)
-          if (sourceFiles.length > 1) {
-            throw new OperationError(
-              `Multiple files match pattern ${operation.from}, but destination is a single file: ${operation.to}`,
-              operation.type,
-              { operation, filesFound: sourceFiles.length }
-            )
+          // If 'to' is '.', just use workspaceRoot + relativePath
+          if (operation.to === '.') {
+            destPath = join(context.workspaceRoot, relativePath)
+          } else {
+            destPath = join(context.workspaceRoot, operation.to, relativePath)
           }
+        } else {
+          // Single file destination (use first file only)
           destPath = resolve(context.workspaceRoot, operation.to)
         }
 

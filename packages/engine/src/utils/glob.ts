@@ -17,10 +17,15 @@ export async function expandGlob(
   baseDir: string
 ): Promise<string[]> {
   const resolvedBase = resolve(baseDir)
-  const resolvedPattern = resolve(resolvedBase, pattern)
+
+  // For glob patterns, we should use the pattern as-is relative to baseDir
+  // Don't resolve the pattern if it contains glob characters, as that breaks glob matching
+  const isGlob = isGlobPattern(pattern)
 
   // Use fast-glob to expand the pattern
-  const files = await fg(resolvedPattern, {
+  // If it's a glob, use the pattern relative to baseDir
+  // Otherwise, resolve it to an absolute path
+  const files = await fg(isGlob ? pattern : resolve(resolvedBase, pattern), {
     cwd: resolvedBase,
     absolute: true,
     onlyFiles: true,
