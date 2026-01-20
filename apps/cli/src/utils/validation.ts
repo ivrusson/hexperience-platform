@@ -81,12 +81,12 @@ export function validateGenerationPlan(
 
   // 4. Check file collisions
   const baseWithOps: TemplateWithOps = {
-    templateDir: '', // Not needed for collision detection
+    templateDir: `base:${base.id}`, // Used for error messages
     ops: baseOps,
   }
 
-  const addonsWithOps: TemplateWithOps[] = addonOps.map(({ ops }) => ({
-    templateDir: '', // Not needed for collision detection
+  const addonsWithOps: TemplateWithOps[] = addonOps.map(({ addon, ops }) => ({
+    templateDir: `addon:${addon.id}`, // Used for error messages
     ops,
   }))
 

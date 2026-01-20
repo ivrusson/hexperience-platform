@@ -16,6 +16,7 @@ import {
   mergeConfig,
 } from '../utils/configLoader'
 import { getErrorHandler } from '../utils/errorHandler'
+import { findProjectRoot } from '../utils/findProjectRoot'
 import { getLogger } from '../utils/logger'
 import { generateMonorepoFiles } from '../utils/monorepoGenerator'
 import { generateQualityStandards } from '../utils/qualityStandardsGenerator'
@@ -121,8 +122,17 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     // Merge config with CLI options (CLI takes precedence)
     const mergedOptions = mergeConfig(options, configFile)
 
-    // Catalog expects the base directory (project root), not templates/ directory
-    const projectRoot = process.cwd()
+    // Find project root containing templates directory
+    const projectRoot = findProjectRoot()
+    if (!projectRoot) {
+      errorHandler.handleError(
+        new Error(
+          'Could not find templates directory. Please ensure templates/bases/ directory exists.'
+        ),
+        { cwd: process.cwd() }
+      )
+      return
+    }
     const catalog = new Catalog(projectRoot)
 
     // Get available templates
