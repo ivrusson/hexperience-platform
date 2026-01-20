@@ -3,6 +3,12 @@ export interface ModelField {
   type: 'string' | 'number' | 'boolean' | 'date' | 'object' | 'array'
   required?: boolean
   defaultValue?: unknown
+  // Validation options
+  min?: number
+  max?: number
+  email?: boolean
+  url?: boolean
+  pattern?: string // regex pattern
 }
 
 export interface ModelRelation {
@@ -66,7 +72,7 @@ class ModelStore {
     })
   }
 
-  // Persistence (optional - can be implemented later)
+  // Persistence
   save(): string {
     return JSON.stringify(this.models, null, 2)
   }
@@ -78,6 +84,42 @@ class ModelStore {
     } catch (error) {
       throw new Error(
         `Failed to load models: ${error instanceof Error ? error.message : String(error)}`
+      )
+    }
+  }
+
+  // File-based persistence
+  async saveToFile(filePath: string): Promise<void> {
+    const { writeFileSync } = await import('node:fs')
+    const { dirname } = await import('node:path')
+    const { mkdir } = await import('node:fs/promises')
+    const { existsSync } = await import('node:fs')
+
+    const dir = dirname(filePath)
+    if (!existsSync(dir)) {
+      await mkdir(dir, { recursive: true })
+    }
+
+    const data = this.save()
+    writeFileSync(filePath, data, 'utf-8')
+  }
+
+  async loadFromFile(filePath: string): Promise<void> {
+    const { readFileSync, existsSync } = await import('node:fs')
+
+    if (!existsSync(filePath)) {
+      // File doesn't exist, start with empty models
+      this.models = []
+      this.notify()
+      return
+    }
+
+    try {
+      const data = readFileSync(filePath, 'utf-8')
+      this.load(data)
+    } catch (error) {
+      throw new Error(
+        `Failed to load models from file: ${error instanceof Error ? error.message : String(error)}`
       )
     }
   }

@@ -63,7 +63,11 @@ program
 program
   .command('tui')
   .description('Interactive TUI for complex tasks')
-  .argument('[subcommand]', 'Subcommand: models or monorepo', 'models')
+  .argument(
+    '[subcommand]',
+    'Subcommand: create (default), models, or monorepo',
+    'create'
+  )
   .action((subcommand: string) => {
     tuiCommand({ subcommand })
   })
