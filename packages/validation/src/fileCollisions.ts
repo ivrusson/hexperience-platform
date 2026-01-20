@@ -73,6 +73,18 @@ export function checkFileCollisions(
 
   for (const [file, ops] of fileOperations) {
     if (ops.length > 1) {
+      // Skip collisions on "." (root directory) for templateRender operations
+      // as these are typically designed to work together
+      if (file === '.' || file === '') {
+        const allTemplateRender = ops.every(
+          (o: { op: Operation; source: string }) =>
+            o.op.type === 'templateRender'
+        )
+        if (allTemplateRender) {
+          continue // Allow multiple templateRender to "." operations
+        }
+      }
+
       // Check if collision is allowed
       const isAllowed = isCollisionAllowed(
         ops.map((o: { op: Operation; source: string }) => o.op)
@@ -105,15 +117,15 @@ export function checkFileCollisions(
 function getAffectedFiles(op: Operation): string[] {
   switch (op.type) {
     case 'copy':
-      return [op.to]
+      return op.to ? [op.to] : []
     case 'templateRender':
-      return [op.to]
+      return op.to ? [op.to] : []
     case 'jsonMerge':
-      return [op.target]
+      return op.target ? [op.target] : []
     case 'textInsert':
-      return [op.target]
+      return op.target ? [op.target] : []
     case 'textReplace':
-      return [op.target]
+      return op.target ? [op.target] : []
     default:
       return []
   }
@@ -125,6 +137,20 @@ function getAffectedFiles(op: Operation): string[] {
 function isCollisionAllowed(operations: Operation[]): boolean {
   // If all operations are jsonMerge on the same target, it's allowed (merging)
   if (operations.every((op) => op.type === 'jsonMerge')) {
+    return true
+  }
+
+  // If all operations are textInsert on the same target, it's allowed
+  // (they use different markers to insert at different locations)
+  if (operations.every((op) => op.type === 'textInsert')) {
+    // textInsert operations are designed to work together on the same file
+    // Each one inserts at a different marker location
+    return true
+  }
+
+  // If all operations are textReplace on the same target, it's allowed
+  // (they replace different parts of the file)
+  if (operations.every((op) => op.type === 'textReplace')) {
     return true
   }
 
